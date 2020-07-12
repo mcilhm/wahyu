@@ -8,8 +8,9 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('plugins/images/favicon.png') }}">
-    <title>Skyriept Travel</title>
+    <title>Industrial Relation Information System</title>
     <!-- ===== Bootstrap CSS ===== -->
     <link href="{{ asset('bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- ===== Plugin CSS ===== -->
@@ -38,7 +39,7 @@
     <section id="wrapper" class="login-register">
         <div class="login-box">
             <div class="white-box">
-            
+
                 {!! Form::open(array('action' => array('Auth\LoginController@login'), 'method' => 'POST','class'=>'form-horizontal form-material','id'=>'loginform')) !!}
                     <h3 class="box-title m-b-20">Sign In</h3>
                     <div class="form-group ">

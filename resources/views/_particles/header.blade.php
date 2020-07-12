@@ -11,7 +11,7 @@
                             <img src="../plugins/images/logo.png" alt="home" />
                         </b>
                         <span>
-                            WAHYU
+                            IRIS
                         </span>
                     </a>
                 </div>

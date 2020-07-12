@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Activity;
+use App\Seksi;
 use DataTables;
 use Illuminate\Http\Request;
-use Validator;
 
-class ActivityController extends Controller
+class SeksiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +15,11 @@ class ActivityController extends Controller
      */
     public function index(Request $request)
     {
-        $activity="";
+        $seksi="";
         if($request->query('edit')){
-            $activity = Activity::findOrFail($request->query('edit'));
+            $seksi = Seksi::findOrFail($request->query('edit'));
         }
-        return view('pages.activity.index', compact('activity'));
+        return view('pages.seksi.index', compact('seksi'));
     }
 
     /**
@@ -30,7 +29,8 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        return view('pages.activity.create');
+        //
+        return view('pages.seksi.create');
     }
 
     /**
@@ -41,35 +41,32 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        $inputs = $request->all();
-
+        $message = "";
         try {
-
             if(!empty($request->id))
             {
-                $activity = Activity::findOrFail($request->id);
-                $activity->update([
-                    'activity_name' => $request->activity_name,
-                    'activity_description' => $request->activity_description,
-                    'activity_before_day' => $request->activity_before_day,
-                    'activity_slug' => $request->activity_slug
+                $message = "Edit";
+                $seksi = Seksi::findOrFail($request->id);
+                $seksi->update([
+                    'name' => $request->name,
+                    'description' => $request->description,
                 ]);
             }
-            else{
-                $activity = Activity::create([
-                    'activity_name' => $request->activity_name,
-                    'activity_description' => $request->activity_description,
-                    'activity_before_day' => $request->activity_before_day,
-                    'activity_slug' => $request->activity_slug
+            else
+            {
+                $message = "Add";
+                $seksi = Seksi::create([
+                    'name' => $request->name,
+                    'description' => $request->description,
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to Add');
-           return redirect('activity');
+            \Session::flash('success.message', 'Success to '.$message);
+           return redirect('seksi');
 
         } catch(\Exception $e) {
-        	\Session::flash('error.message', 'Failed to Add');
-            return redirect('activity');
+        	\Session::flash('error.message', 'Failed to '.$message);
+            return redirect('seksi');
         }
     }
 
@@ -115,25 +112,23 @@ class ActivityController extends Controller
      */
     public function destroy($id)
     {
-        $delete = Activity::findOrFail($id);
+        $delete = Seksi::findOrFail($id);
         $delete->delete();
 
         \Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
-
     public function getdata()
     {
-    	$activity = Activity::all();
-        return Datatables::of($activity)
+    	$seksi = Seksi::all();
+        return Datatables::of($seksi)
 
-            ->addColumn('action',  function ($activity) {
+            ->addColumn('action',  function ($seksi) {
 
-            	$action = '<div class="btn-group"> <a href="activity?edit='.$activity->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                    <a href="activity_status/'.$activity->id.'" title="Status" class="btn btn-xs btn-warning"><i class="fa fa-eye"></i></a>
-                    <a href="activity/delete/'.$activity->id.'"  data-id="'.$activity->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
-                    </div>';
+            	$action = '<div class="btn-group"> <a href="seksi?edit='.$seksi->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="seksi/delete/'.$seksi->id.'"  data-id="'.$seksi->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+
                 return $action;
             })
 

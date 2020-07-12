@@ -12,10 +12,9 @@
     $('body').on('click', '.sa-remove', function (e) {
         e.preventDefault();
         var url = $(this).attr('href');
-        var postId = $(this).data('id'); 
+        var postId = $(this).data('id');
         swal({
-            title: "are u sure?",
-            text: "lorem lorem lorem",
+            title: "Apa kamu yakin?",
             type: "error",
             html: true,
             showCancelButton: true,

@@ -19,7 +19,7 @@
                     <ul id="side-menu">
                     @if(Auth::user()->user_type == 0)
                         <li>
-                            <a href="{{ url('dashboard') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Dashboard</span></a>
+                            <a href="{{ url('home') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Home</span></a>
                         </li>
                         <li>
                             <a href="{{ url('employee') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Employee</span></a>
@@ -31,6 +31,21 @@
                             <a href="{{ url('division') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Division</span></a>
                         </li>
                         <li>
+                            <a href="{{ url('seksi') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Seksi</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ url('department') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Department</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ url('pendidikan') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Pendidikan</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ url('position') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Position</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ url('kelas') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Kelas</span></a>
+                        </li>
+                        <li>
                             <a href="{{ url('activity') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Activity</span></a>
                         </li>
                     @elseif(Auth::user()->user_type == 1)
@@ -40,7 +55,7 @@
 
                         @foreach($menu as $row)
                         <li>
-                            <a href="{{ url('dashboard') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                            <a href="{{ url($row->activity_slug) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
                         </li>
                         @endforeach
                     @elseif(Auth::user()->user_type == 2)
@@ -50,11 +65,11 @@
 
                         @foreach($menu as $row)
                         <li>
-                            <a href="{{ url('dashboard') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                            <a href="{{ url($row->activity_slug) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
                         </li>
                         @endforeach
                     @endif
-                        
+
                     </ul>
                 </nav>
                 <div class="p-30">

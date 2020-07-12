@@ -129,14 +129,14 @@ class ActivityStatusController extends Controller
     {
     	$activityStatus = ActivityStatus::where('activity_id', $id_activity)->get();
         return Datatables::of($activityStatus)
-            ->addColumn('action',  function ($activityStatus) use($id_activity){ 
+            ->addColumn('action',  function ($activityStatus) use($id_activity){
 
-            	$action = '<div class="btn-group"> <a href="'.$id_activity.'/?edit='.$activityStatus->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a> 
-                    <a href="activity/delete/'.$activityStatus->id.'"  data-id="'.$activityStatus->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a> 
+            	$action = '<div class="btn-group"> <a href="'.$id_activity.'/?edit='.$activityStatus->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                    <a href="delete/'.$activityStatus->id.'"  data-id="'.$activityStatus->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
                     </div>';
                 return $action;
             })
-            
+
             ->rawColumns(['action'])
             ->make(true);
 

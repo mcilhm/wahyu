@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Activity;
+use App\Department;
 use DataTables;
 use Illuminate\Http\Request;
-use Validator;
 
-class ActivityController extends Controller
+class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +15,11 @@ class ActivityController extends Controller
      */
     public function index(Request $request)
     {
-        $activity="";
+        $department="";
         if($request->query('edit')){
-            $activity = Activity::findOrFail($request->query('edit'));
+            $department = Department::findOrFail($request->query('edit'));
         }
-        return view('pages.activity.index', compact('activity'));
+        return view('pages.department.index', compact('department'));
     }
 
     /**
@@ -30,7 +29,8 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        return view('pages.activity.create');
+        //
+        return view('pages.department.create');
     }
 
     /**
@@ -41,35 +41,32 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        $inputs = $request->all();
-
+        $message = "";
         try {
-
             if(!empty($request->id))
             {
-                $activity = Activity::findOrFail($request->id);
-                $activity->update([
-                    'activity_name' => $request->activity_name,
-                    'activity_description' => $request->activity_description,
-                    'activity_before_day' => $request->activity_before_day,
-                    'activity_slug' => $request->activity_slug
+                $message = "Edit";
+                $department = Department::findOrFail($request->id);
+                $department->update([
+                    'name' => $request->name,
+                    'description' => $request->description,
                 ]);
             }
-            else{
-                $activity = Activity::create([
-                    'activity_name' => $request->activity_name,
-                    'activity_description' => $request->activity_description,
-                    'activity_before_day' => $request->activity_before_day,
-                    'activity_slug' => $request->activity_slug
+            else
+            {
+                $message = "Add";
+                $department = Department::create([
+                    'name' => $request->name,
+                    'description' => $request->description,
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to Add');
-           return redirect('activity');
+            \Session::flash('success.message', 'Success to '.$message);
+           return redirect('department');
 
         } catch(\Exception $e) {
-        	\Session::flash('error.message', 'Failed to Add');
-            return redirect('activity');
+        	\Session::flash('error.message', 'Failed to '.$message);
+            return redirect('department');
         }
     }
 
@@ -115,25 +112,23 @@ class ActivityController extends Controller
      */
     public function destroy($id)
     {
-        $delete = Activity::findOrFail($id);
+        $delete = Department::findOrFail($id);
         $delete->delete();
 
         \Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
-
     public function getdata()
     {
-    	$activity = Activity::all();
-        return Datatables::of($activity)
+    	$department = Department::all();
+        return Datatables::of($department)
 
-            ->addColumn('action',  function ($activity) {
+            ->addColumn('action',  function ($department) {
 
-            	$action = '<div class="btn-group"> <a href="activity?edit='.$activity->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                    <a href="activity_status/'.$activity->id.'" title="Status" class="btn btn-xs btn-warning"><i class="fa fa-eye"></i></a>
-                    <a href="activity/delete/'.$activity->id.'"  data-id="'.$activity->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
-                    </div>';
+            	$action = '<div class="btn-group"> <a href="department?edit='.$department->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="department/delete/'.$department->id.'"  data-id="'.$department->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+
                 return $action;
             })
 

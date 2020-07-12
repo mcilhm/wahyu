@@ -5,11 +5,10 @@
         <div class="container-fluid">
             <!-- /row -->
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-8">
                     <div class="white-box">
                         <h3 class="box-title m-b-0">Data Export</h3>
                         <div class="col-lg-2 col-sm-4 col-xs-12 pull-right">
-                            <a href="{{ url('review/create') }}"><button class="btn btn-block btn-primary">Add</button></a>
                         </div>
                         <p class="text-muted m-b-30">Export data to Copy, CSV, Excel, PDF & Print</p>
                         <div class="table-responsive">
@@ -17,22 +16,16 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Review Name</th>
-                                        <th>Tour</th>
-                                        <th>Review Value</th>
-                                        <th>Review Description</th>
-                                        <th>Review Date</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
-                                        <th>Review Name</th>
-                                        <th>Tour</th>
-                                        <th>Review Value</th>
-                                        <th>Review Description</th>
-                                        <th>Review Date</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
@@ -40,6 +33,26 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="white-box">
+                        <h3 class="box-title m-b-0">Form</h3>
+                        <p class="text-muted m-b-30 font-13"> Fill out the form correctly </p>
+                        {{ Form::open(array('action' => array('Admin\DivisionController@store'), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
+                            <input type="hidden" name="id" value="{{ isset($division->id) ? $division->id : null }}">
+                            <div class="form-group">
+                                <label class="control-label">Name</label>
+                                <input type="text" required="" class="form-control" placeholder="Name" name="name" value="{{ isset($division->name) ? $division->name : null }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Description</label>
+                                <input type="text" required="" class="form-control" placeholder="Description" name="description" value="{{ isset($division->description) ? $division->description : null }}">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
+                            </div>
+                        {{ Form::close() }}
                     </div>
                 </div>
             </div>
@@ -67,15 +80,12 @@
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
                 ajax : {
-                    "url": "review/reviewlist"
+                    "url": "division/divisionlist"
                 },
                 columns: [
                     {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},
-                    {data: 'review_name', name: 'review_name', searchable: true},
-                    {data: 'review_tour', name: 'review_tour', searchable: true},
-                    {data: 'review_value', name: 'review_value', searchable: true},
-                    {data: 'review_description', name: 'review_description'},
-                    {data: 'review_date', name: 'review_date'},
+                    {data: 'name', name: 'name', searchable: true},
+                    {data: 'description', name: 'description', searchable: true},
                     {data: 'action', name: 'action', orderable: false}
                 ]
             });
