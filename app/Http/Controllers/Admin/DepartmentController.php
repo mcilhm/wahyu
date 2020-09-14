@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
+use App\Division;
 use App\Department;
+use App\Section;
 use DataTables;
+use DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -16,10 +20,11 @@ class DepartmentController extends Controller
     public function index(Request $request)
     {
         $department="";
+        $division = Division::all();
         if($request->query('edit')){
             $department = Department::findOrFail($request->query('edit'));
         }
-        return view('pages.department.index', compact('department'));
+        return view('pages.department.index', compact('department', 'division'));
     }
 
     /**
@@ -50,6 +55,7 @@ class DepartmentController extends Controller
                 $department->update([
                     'name' => $request->name,
                     'description' => $request->description,
+                    'division_id' => $request->division_id,
                 ]);
             }
             else
@@ -58,6 +64,7 @@ class DepartmentController extends Controller
                 $department = Department::create([
                     'name' => $request->name,
                     'description' => $request->description,
+                    'division_id' => $request->division_id,
                 ]);
             }
 
@@ -65,6 +72,7 @@ class DepartmentController extends Controller
            return redirect('department');
 
         } catch(\Exception $e) {
+            Log::error($ex->getMessage());
         	\Session::flash('error.message', 'Failed to '.$message);
             return redirect('department');
         }
@@ -121,7 +129,15 @@ class DepartmentController extends Controller
     }
     public function getdata()
     {
-    	$department = Department::all();
+        // $department = Department::all();
+
+        $department = DB::select('SELECT
+                        A.`id`,
+                        A.`name`,
+                        A.`description`,
+                        B.`name` division_name
+                        FROM `department` A
+                        LEFT JOIN `division` B ON A.`division_id` = B.`id`');
         return Datatables::of($department)
 
             ->addColumn('action',  function ($department) {
@@ -135,5 +151,9 @@ class DepartmentController extends Controller
             ->rawColumns(['action'])
             ->make(true);
 
+    }
+
+    public function getSection($id) {
+        return Section::select('id', 'name')->where('department_id', $id)->get();
     }
 }

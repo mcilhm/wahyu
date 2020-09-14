@@ -18,6 +18,7 @@
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Description</th>
+                                        <th>Division Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -26,6 +27,7 @@
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Description</th>
+                                        <th>Division Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
@@ -50,7 +52,17 @@
                                 <input type="text" required="" class="form-control" placeholder="Description" name="description" value="{{ isset($department->description) ? $department->description : null }}">
                             </div>
                             <div class="form-group">
+                                <label class="control-label">Division ID</label>
+                                <select class="form-control" name="division_id" required>
+                                    <option>- Select -</option>
+                                    @foreach($division as $row)
+                                    <option value="{{ $row->id }}" <?php if(isset($department->division_id)) if($row->id == $department->division_id){ echo "selected"; }?>>{{ $row->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
+                                <a href="{{ url('department') }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
                             </div>
                         {{ Form::close() }}
                     </div>
@@ -86,6 +98,7 @@
                     {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},
                     {data: 'name', name: 'name', searchable: true},
                     {data: 'description', name: 'description', searchable: true},
+                    {data: 'division_name', name: 'division_name', searchable: true},
                     {data: 'action', name: 'action', orderable: false}
                 ]
             });

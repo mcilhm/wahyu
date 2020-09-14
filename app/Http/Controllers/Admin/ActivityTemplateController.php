@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\ActivityStatus;
-use App\Division;
+use App\ActivityTemplate;
 use DataTables;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Validator;
 use Image;
 
-class ActivityStatusController extends Controller
+class ActivityTemplateController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,11 +20,10 @@ class ActivityStatusController extends Controller
     {
         $activity="";
         $idActivity = $id_activity;
-        $division = Division::all();
         if($request->query('edit')){
-            $activity = ActivityStatus::findOrFail($request->query('edit'));
+            $activity = ActivityTemplate::findOrFail($request->query('edit'));
         }
-        return view('pages.activity_status.index', compact('activity','idActivity','division'));
+        return view('pages.activity_template.index', compact('activity','idActivity'));
     }
 
     /**
@@ -35,7 +33,7 @@ class ActivityStatusController extends Controller
      */
     public function create()
     {
-        return view('pages.activity_status.create');
+        return view('pages.activity_template.create');
     }
 
     /**
@@ -52,28 +50,26 @@ class ActivityStatusController extends Controller
 
             if(!empty($request->id))
             {
-                $activity_status = ActivityStatus::findOrFail($request->id);
-                $activity_status->update([
+                $activity_template = ActivityTemplate::findOrFail($request->id);
+                $activity_template->update([
                     'activity_id' => $id_activity,
-                    'activity_status_name' => $request->activity_status_name,
-                    'division_id' => $request->division_id
+                    'activity_template_name' => $request->activity_template_name
                 ]);
             }
             else{
-                $activity_status = ActivityStatus::create([
+                $activity_template = ActivityTemplate::create([
                     'activity_id' => $id_activity,
-                    'activity_status_name' => $request->activity_status_name,
-                    'division_id' => $request->division_id
+                    'activity_template_name' => $request->activity_template_name
                 ]);
             }
 
             \Session::flash('success.message', 'Success to Add');
-            return redirect('activity_status/'.$id_activity);
+            return redirect('activity_template/'.$id_activity);
 
         } catch(\Exception $e) {
             Log::error($ex->getMessage());
         	\Session::flash('error.message', 'Failed to Add');
-            return redirect('activity_status/'.$id_activity);
+            return redirect('activity_template/'.$id_activity);
         }
     }
 
@@ -119,7 +115,7 @@ class ActivityStatusController extends Controller
      */
     public function destroy($id)
     {
-        $delete = ActivityStatus::findOrFail($id);
+        $delete = ActivityTemplate::findOrFail($id);
         $delete->delete();
 
         \Session::flash('success.message', trans("Success To Delete"));
@@ -129,12 +125,12 @@ class ActivityStatusController extends Controller
 
     public function getdata($id_activity)
     {
-    	$activityStatus = ActivityStatus::where('activity_id', $id_activity)->get();
-        return Datatables::of($activityStatus)
-            ->addColumn('action',  function ($activityStatus) use($id_activity){
+    	$ActivityTemplate = ActivityTemplate::where('activity_id', $id_activity)->get();
+        return Datatables::of($ActivityTemplate)
+            ->addColumn('action',  function ($ActivityTemplate) use($id_activity){
 
-            	$action = '<div class="btn-group"> <a href="'.$id_activity.'/?edit='.$activityStatus->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                    <a href="delete/'.$activityStatus->id.'"  data-id="'.$activityStatus->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+            	$action = '<div class="btn-group"> <a href="'.$id_activity.'/?edit='.$ActivityTemplate->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                    <a href="delete/'.$ActivityTemplate->id.'"  data-id="'.$ActivityTemplate->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
                     </div>';
                 return $action;
             })

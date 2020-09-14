@@ -51,6 +51,7 @@
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
+                                <a href="{{ url('position') }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
                             </div>
                         {{ Form::close() }}
                     </div>

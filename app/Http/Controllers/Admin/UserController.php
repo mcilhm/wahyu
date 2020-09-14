@@ -1,8 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller;
 use App\User;
+use App\Role;
+use App\Employee;
 use DataTables;
+use DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -15,10 +20,20 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $user="";
+        $role= Role::All();
+        $employee = DB::table('employee')
+           ->whereNotExists(function ($query) {
+               $query->select('users.username')
+                     ->from('users')
+                     ->whereRaw('employee.no_reg = users.username');
+           })
+           ->get();
+
         if($request->query('edit')){
             $user = User::findOrFail($request->query('edit'));
+            $employee = Employee::All();
         }
-        return view('pages.user.index', compact('user'));
+        return view('pages.user.index', compact('user', 'role', 'employee'));
     }
 
     /**
@@ -40,33 +55,46 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $message = "";
         try {
             if(!empty($request->id))
             {
+                $message = "Edit";
                 $user = User::findOrFail($request->id);
-                $user->update([
-                    'username' => $request->username,
-                    'password' => bcrypt($request->password),
-                    'user_fullname' => $request->user_fullname,
-                    'user_email' => $request->user_email
-                ]);
+
+                if(empty($request->password))
+                {
+                    $user->update([
+                        'role_id' => $request->role_id,
+                    ]);
+                }
+                else
+                {
+                    $user->update([
+                        'password' => bcrypt($request->password),
+                        'role_id' => $request->role_id,
+                    ]);
+                }
             }
             else
             {
+                $message = "Add";
+                $employee = Employee::where('no_reg', $request->username)->first();
                 $user = User::create([
                     'username' => $request->username,
                     'password' => bcrypt($request->password),
-                    'user_fullname' => $request->user_fullname,
-                    'user_email' => $request->user_email,
-                    'user_level' => '0'
+                    'user_type' => '1',
+                    'employee_id' => $employee->id,
+                    'role_id' => $request->role_id,
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to Add');
+            \Session::flash('success.message', 'Success to '.$message);
            return redirect('user');
 
-        } catch(\Exception $e) {
-        	\Session::flash('error.message', 'Failed to Add');
+        } catch(\Exception $ex) {
+            Log::error($ex->getMessage());
+        	\Session::flash('error.message', 'Failed to '.$message);
             return redirect('user');
         }
     }
@@ -123,16 +151,22 @@ class UserController extends Controller
     public function getdata()
     {
     	$user = User::all();
+        $user = DB::select('SELECT
+                    A.`id`,
+                    A.`username`,
+                    B.`name` role_name
+                    FROM users A
+                    INNER JOIN role B ON A.`role_id` = B.`id`');
         return Datatables::of($user)
 
-            ->addColumn('action',  function ($user) { 
+            ->addColumn('action',  function ($user) {
 
-            	$action = '<div class="btn-group"> <a href="user?edit='.$user->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a> 
+            	$action = '<div class="btn-group"> <a href="user?edit='.$user->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
                 <a href="user/delete/'.$user->id.'"  data-id="'.$user->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
 
                 return $action;
             })
-            
+
             ->rawColumns(['action'])
             ->make(true);
 

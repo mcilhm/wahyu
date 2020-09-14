@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Pendidikan;
+use App\Section;
+use App\Department;
 use DataTables;
+use DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
-class PendidikanController extends Controller
+class SectionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,11 +18,12 @@ class PendidikanController extends Controller
      */
     public function index(Request $request)
     {
-        $pendidikan="";
+        $section="";
+        $department = Department::all();
         if($request->query('edit')){
-            $pendidikan = Pendidikan::findOrFail($request->query('edit'));
+            $section = Section::findOrFail($request->query('edit'));
         }
-        return view('pages.pendidikan.index', compact('pendidikan'));
+        return view('pages.section.index', compact('section', 'department'));
     }
 
     /**
@@ -30,7 +34,7 @@ class PendidikanController extends Controller
     public function create()
     {
         //
-        return view('pages.pendidikan.create');
+        return view('pages.section.create');
     }
 
     /**
@@ -46,27 +50,30 @@ class PendidikanController extends Controller
             if(!empty($request->id))
             {
                 $message = "Edit";
-                $pendidikan = Pendidikan::findOrFail($request->id);
-                $pendidikan->update([
+                $section = Section::findOrFail($request->id);
+                $section->update([
                     'name' => $request->name,
                     'description' => $request->description,
+                    'department_id' => $request->department_id
                 ]);
             }
             else
             {
                 $message = "Add";
-                $pendidikan = Pendidikan::create([
+                $section = Section::create([
                     'name' => $request->name,
                     'description' => $request->description,
+                    'department_id' => $request->department_id
                 ]);
             }
 
             \Session::flash('success.message', 'Success to '.$message);
-           return redirect('pendidikan');
+           return redirect('section');
 
         } catch(\Exception $e) {
+            Log::error($ex->getMessage());
         	\Session::flash('error.message', 'Failed to '.$message);
-            return redirect('pendidikan');
+            return redirect('section');
         }
     }
 
@@ -112,7 +119,7 @@ class PendidikanController extends Controller
      */
     public function destroy($id)
     {
-        $delete = Pendidikan::findOrFail($id);
+        $delete = section::findOrFail($id);
         $delete->delete();
 
         \Session::flash('success.message', trans("Success To Delete"));
@@ -121,13 +128,20 @@ class PendidikanController extends Controller
     }
     public function getdata()
     {
-    	$pendidikan = Pendidikan::all();
-        return Datatables::of($pendidikan)
+    	// $section = section::all();
+        $section = DB::select('SELECT
+                        A.`id`,
+                        A.`name`,
+                        A.`description`,
+                        B.`name` department_name
+                        FROM `section` A
+                        LEFT JOIN `department` B ON A.`department_id` = B.`id`');
+        return Datatables::of($section)
 
-            ->addColumn('action',  function ($pendidikan) {
+            ->addColumn('action',  function ($section) {
 
-            	$action = '<div class="btn-group"> <a href="pendidikan?edit='.$pendidikan->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                <a href="pendidikan/delete/'.$pendidikan->id.'"  data-id="'.$pendidikan->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+            	$action = '<div class="btn-group"> <a href="section?edit='.$section->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="section/delete/'.$section->id.'"  data-id="'.$section->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
 
                 return $action;
             })

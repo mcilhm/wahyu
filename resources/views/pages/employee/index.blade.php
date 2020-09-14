@@ -88,16 +88,28 @@
                             <div class="form-group">
                                 <label class="control-label">Division ID</label>
                                 <select class="form-control" name="division_id" required>
-                                    <option>Select</option>
+                                    <option>- Select -</option>
                                     @foreach($division as $row)
                                     <option value="{{ $row->id }}" <?php if(isset($employee->division_id)) if($row->id == $employee->division_id){ echo "selected"; }?>>{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label class="control-label">Department ID</label>
+                                <select class="form-control" name="department_id" required disabled>
+                                    <option value=''>- Select -</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Section ID</label>
+                                <select class="form-control" name="section_id" required disabled>
+                                    <option>- Select -</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label class="control-label">Class ID</label>
                                 <select class="form-control" name="kelas_id" required>
-                                    <option>Select</option>
+                                    <option>- Select -</option>
                                     @foreach($kelas as $row)
                                     <option value="{{ $row->id }}" <?php if(isset($employee->kelas_id))  if($row->id == $employee->kelas_id){ echo "selected"; }?>>{{ $row->name }}</option>
                                     @endforeach
@@ -106,34 +118,16 @@
                             <div class="form-group">
                                 <label class="control-label">Position ID</label>
                                 <select class="form-control" name="position_id" required>
-                                    <option>Select</option>
+                                    <option>- Select -</option>
                                     @foreach($position as $row)
                                     <option value="{{ $row->id }}" <?php if(isset($employee->position_id)) if($row->id == $employee->position_id){ echo "selected"; }?>>{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label">Department ID</label>
-                                <select class="form-control" name="department_id" required>
-                                    <option>Select</option>
-                                    @foreach($department as $row)
-                                    <option value="{{ $row->id }}" <?php if(isset($employee->department_id)) if($row->id == $employee->department_id){ echo "selected"; }?>>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Section ID</label>
-                                <select class="form-control" name="seksi_id" required>
-                                    <option>Select</option>
-                                    @foreach($seksi as $row)
-                                    <option value="{{ $row->id }}" <?php if(isset($employee->seksi_id)) if($row->id == $employee->seksi_id){ echo "selected"; }?>>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
                                 <label class="control-label">Job Status</label>
                                 <select class="form-control" name="job_status" required>
-                                    <option>Select</option>
+                                    <option>- Select -</option>
                                     <option value="0" <?php if(isset($employee->job_status)) if($employee->job_status == "0"){ echo "selected"; }?>>DL</option>
                                     <option value="1" <?php if(isset($employee->job_status)) if($employee->job_status == "1"){ echo "selected"; }?>>IDL</option>
                                 </select>
@@ -148,10 +142,10 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Education ID</label>
-                                <select class="form-control" name="pendidikan_id" required>
-                                    <option>Select</option>
-                                    @foreach($pendidikan as $row)
-                                    <option value="{{ $row->id }}" <?php if(isset($employee->pendidikan_id)) if($row->id == $employee->pendidikan_id){ echo "selected"; }?>>{{ $row->name }}</option>
+                                <select class="form-control" name="education_id" required>
+                                    <option>- Select -</option>
+                                    @foreach($education as $row)
+                                    <option value="{{ $row->id }}" <?php if(isset($employee->education_id)) if($row->id == $employee->education_id){ echo "selected"; }?>>{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -162,7 +156,7 @@
                             <div class="form-group">
                                 <label class="control-label">Marital Status</label>
                                 <select class="form-control" name="marital_status" required>
-                                    <option>Select</option>
+                                    <option>- Select -</option>
                                     <option value="0" <?php if(isset($employee->marital_status)) if($employee->marital_status == "0"){ echo "selected"; }?>>Sudah Menikah</option>
                                     <option value="1" <?php if(isset($employee->marital_status)) if($employee->marital_status == "1"){ echo "selected"; }?>>Belum Menikah</option>
                                 </select>
@@ -170,7 +164,7 @@
                             <div class="form-group">
                                 <label class="control-label">Gender</label>
                                 <select class="form-control" name="gender" required>
-                                    <option>Select</option>
+                                    <option>- Select -</option>
                                     <option value="0" <?php if(isset($employee->gender)) if($employee->gender == "0"){ echo "selected"; }?>>Laki-laki</option>
                                     <option value="1" <?php if(isset($employee->gender)) if($employee->gender == "1"){ echo "selected"; }?>>Wanita</option>
                                 </select>
@@ -186,13 +180,14 @@
                             <div class="form-group">
                                 <label class="control-label">Status</label>
                                 <select class="form-control" name="status" required>
-                                    <option>Select</option>
+                                    <option>- Select -</option>
                                     <option value="0" <?php if(isset($employee->status)) if($employee->status == "0"){ echo "selected"; }?>>PKWT</option>
                                     <option value="1" <?php if(isset($employee->status)) if($employee->status == "1"){ echo "selected"; }?>>PKWTT</option>
                                 </select>
                              </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
+                                <a href="{{ url('employee') }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
                             </div>
                         {{ Form::close() }}
                     </div>
@@ -212,41 +207,72 @@
 @section('footer')
 <script></script>
 <script type="text/javascript">
-    $( document ).ready(function() {
 
-            $('#example23').DataTable({
-                processing: true,
-                serverSide: true,
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ],
-                ajax : {
-                    "url": "employee/employeelist"
-                },
-                columns: [
-                    {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},
-                    {data: 'no_reg', name: 'no_reg', searchable: true},
-                    {data: 'first_name', name: 'first_name', searchable: true},
-                    {data: 'last_name', name: 'last_name', searchable: true},
-                    {data: 'division_name', name: 'division_name', searchable: true},
-                    {data: 'kelas_name', name: 'kelas_name', searchable: true},
-                    {data: 'position_name', name: 'position_name', searchable: true},
-                    {data: 'department_name', name: 'department_name', searchable: true},
-                    {data: 'seksi_name', name: 'seksi_id', searchable: true},
-                    {data: 'job_status', name: 'job_status', searchable: true},
-                    {data: 'date_of_entry', name: 'date_of_entry', searchable: true},
-                    {data: 'date_of_birthday', name: 'date_of_birthday', searchable: true},
-                    {data: 'pendidikan_name', name: 'pendidikan_name', searchable: true},
-                    {data: 'work_location', name: 'work_location', searchable: true},
-                    {data: 'marital_status', name: 'marital_status', searchable: false},
-                    {data: 'gender', name: 'gender', searchable: false},
-                    {data: 'email', name: 'email', searchable: false},
-                    {data: 'phone_number', name: 'phone_number', searchable: false},
-                    {data: 'status', name: 'status', searchable: true},
-                    {data: 'action', name: 'action', orderable: false}
-                ]
+    $(function() {
+        $('select[name="division_id"]').change(function () {
+            var url = "{{ url('division') }}/" + $(this).val() + "/department";
+
+            $.get(url, function (data) {
+                $('select[name="department_id"]').prop("disabled", false);
+                var select = $('form select[name="department_id"]');
+                select.empty();
+                select.append("<option value=''>- PILIH -</option>");
+                $.each(data,function (key,value) {
+                    select.append("<option value='" + value.id + "'>" + value.name + "</option>");
+                });
             });
+        });
+
+
+        $('select[name="department_id"]').change(function () {
+            var url = "{{ url('department') }}/" + $(this).val() + "/section";
+
+            $.get(url, function (data) {
+                $('select[name="section_id"]').prop("disabled", false);
+                var select = $('form select[name="section_id"]');
+                select.empty();
+                select.append("<option value=''>- PILIH -</option>");
+                $.each(data,function (key,value) {
+                    select.append("<option value='" + value.id + "'>" + value.name + "</option>");
+                });
+            });
+        });
+    });
+    $(document).ready(function() {
+
+        $('#example23').DataTable({
+            processing: true,
+            serverSide: true,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            ajax : {
+                "url": "employee/employeelist"
+            },
+            columns: [
+                {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},
+                {data: 'no_reg', name: 'no_reg', searchable: true},
+                {data: 'first_name', name: 'first_name', searchable: true},
+                {data: 'last_name', name: 'last_name', searchable: true},
+                {data: 'division_name', name: 'division_name', searchable: true},
+                {data: 'department_name', name: 'department_name', searchable: true},
+                {data: 'section_name', name: 'section_name', searchable: true},
+                {data: 'kelas_name', name: 'kelas_name', searchable: true},
+                {data: 'position_name', name: 'position_name', searchable: true},
+                {data: 'job_status', name: 'job_status', searchable: true},
+                {data: 'date_of_entry', name: 'date_of_entry', searchable: true},
+                {data: 'date_of_birthday', name: 'date_of_birthday', searchable: true},
+                {data: 'education_name', name: 'education_name', searchable: true},
+                {data: 'work_location', name: 'work_location', searchable: true},
+                {data: 'marital_status', name: 'marital_status', searchable: false},
+                {data: 'gender', name: 'gender', searchable: false},
+                {data: 'email', name: 'email', searchable: false},
+                {data: 'phone_number', name: 'phone_number', searchable: false},
+                {data: 'status', name: 'status', searchable: true},
+                {data: 'action', name: 'action', orderable: false}
+            ]
+        });
 
     });
 </script>

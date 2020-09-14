@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Kelas;
 use DataTables;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -65,6 +66,7 @@ class KelasController extends Controller
            return redirect('kelas');
 
         } catch(\Exception $e) {
+            Log::error($ex->getMessage());
         	\Session::flash('error.message', 'Failed to '.$message);
             return redirect('kelas');
         }

@@ -74,7 +74,7 @@ class LoginController extends Controller
             if(Auth::user()->user_type == 1){
                 $employee = Employee::where('id',Auth::user()->employee_id)->first();
                 $request->session()->put([
-                    'division_id' => $employee->division_id
+                    'role_id' => $employee->role_id
                 ]);
             }
             return redirect('home');
@@ -85,6 +85,6 @@ class LoginController extends Controller
             return redirect('/');
         }
 
-        
+
     }
 }

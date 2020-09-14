@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Division;
-use App\Department;
+use App\Role;
 use DataTables;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
-class DivisionController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,11 +16,11 @@ class DivisionController extends Controller
      */
     public function index(Request $request)
     {
-        $division="";
+        $role="";
         if($request->query('edit')){
-            $division = Division::findOrFail($request->query('edit'));
+            $role = Role::findOrFail($request->query('edit'));
         }
-        return view('pages.division.index', compact('division'));
+        return view('pages.role.index', compact('role'));
     }
 
     /**
@@ -32,7 +31,7 @@ class DivisionController extends Controller
     public function create()
     {
         //
-        return view('pages.division.create');
+        return view('pages.role.create');
     }
 
     /**
@@ -48,8 +47,8 @@ class DivisionController extends Controller
             if(!empty($request->id))
             {
                 $message = "Edit";
-                $division = Division::findOrFail($request->id);
-                $division->update([
+                $role = Role::findOrFail($request->id);
+                $role->update([
                     'name' => $request->name,
                     'description' => $request->description,
                 ]);
@@ -57,19 +56,19 @@ class DivisionController extends Controller
             else
             {
                 $message = "Add";
-                $division = Division::create([
+                $role = Role::create([
                     'name' => $request->name,
                     'description' => $request->description,
                 ]);
             }
 
             \Session::flash('success.message', 'Success to '.$message);
-           return redirect('division');
+           return redirect('role');
 
         } catch(\Exception $e) {
             Log::error($ex->getMessage());
         	\Session::flash('error.message', 'Failed to '.$message);
-            return redirect('division');
+            return redirect('role');
         }
     }
 
@@ -115,7 +114,7 @@ class DivisionController extends Controller
      */
     public function destroy($id)
     {
-        $delete = Division::findOrFail($id);
+        $delete = role::findOrFail($id);
         $delete->delete();
 
         \Session::flash('success.message', trans("Success To Delete"));
@@ -124,13 +123,13 @@ class DivisionController extends Controller
     }
     public function getdata()
     {
-    	$division = Division::all();
-        return Datatables::of($division)
+    	$role = Role::all();
+        return Datatables::of($role)
 
-            ->addColumn('action',  function ($division) {
+            ->addColumn('action',  function ($role) {
 
-            	$action = '<div class="btn-group"> <a href="division?edit='.$division->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                <a href="division/delete/'.$division->id.'"  data-id="'.$division->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+            	$action = '<div class="btn-group"> <a href="role?edit='.$role->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="role/delete/'.$role->id.'"  data-id="'.$role->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
 
                 return $action;
             })
@@ -138,9 +137,5 @@ class DivisionController extends Controller
             ->rawColumns(['action'])
             ->make(true);
 
-    }
-
-    public function getDepartment($id) {
-        return Department::select('id', 'name')->where('division_id', $id)->get();
     }
 }

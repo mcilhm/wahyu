@@ -21,7 +21,24 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::get('division/divisionlist','Admin\DivisionController@getdata');
     Route::get('division', 'Admin\DivisionController@index');
     Route::post('division', 'Admin\DivisionController@store');
+    Route::get('division/{id}/department','Admin\DivisionController@getDepartment');
     Route::get('division/delete/{id}','Admin\DivisionController@destroy');
+
+    Route::get('department/departmentlist','Admin\DepartmentController@getdata');
+    Route::get('department', 'Admin\DepartmentController@index');
+    Route::post('department', 'Admin\DepartmentController@store');
+    Route::get('department/{id}/section','Admin\DepartmentController@getSection');
+    Route::get('department/delete/{id}','Admin\DepartmentController@destroy');
+
+    Route::get('section/sectionlist','Admin\SectionController@getdata');
+    Route::get('section', 'Admin\SectionController@index');
+    Route::post('section', 'Admin\SectionController@store');
+    Route::get('section/delete/{id}','Admin\SectionController@destroy');
+
+    Route::get('employee/employeelist','Admin\EmployeeController@getdata');
+    Route::get('employee', 'Admin\EmployeeController@index');
+    Route::post('employee', 'Admin\EmployeeController@store');
+    Route::get('employee/delete/{id}','Admin\EmployeeController@destroy');
 
 
     Route::get('kelas/kelaslist','Admin\KelasController@getdata');
@@ -29,36 +46,20 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::post('kelas', 'Admin\KelasController@store');
     Route::get('kelas/delete/{id}','Admin\KelasController@destroy');
 
-
-    Route::get('department/departmentlist','Admin\DepartmentController@getdata');
-    Route::get('department', 'Admin\DepartmentController@index');
-    Route::post('department', 'Admin\DepartmentController@store');
-    Route::get('department/delete/{id}','Admin\DepartmentController@destroy');
-
-
     Route::get('position/positionlist','Admin\PositionController@getdata');
     Route::get('position', 'Admin\PositionController@index');
     Route::post('position', 'Admin\PositionController@store');
     Route::get('position/delete/{id}','Admin\PositionController@destroy');
 
+    Route::get('education/educationlist','Admin\EducationController@getdata');
+    Route::get('education', 'Admin\EducationController@index');
+    Route::post('education', 'Admin\EducationController@store');
+    Route::get('education/delete/{id}','Admin\EducationController@destroy');
 
-    Route::get('pendidikan/pendidikanlist','Admin\PendidikanController@getdata');
-    Route::get('pendidikan', 'Admin\PendidikanController@index');
-    Route::post('pendidikan', 'Admin\PendidikanController@store');
-    Route::get('pendidikan/delete/{id}','Admin\PendidikanController@destroy');
-
-
-    Route::get('seksi/seksilist','Admin\SeksiController@getdata');
-    Route::get('seksi', 'Admin\SeksiController@index');
-    Route::post('seksi', 'Admin\SeksiController@store');
-    Route::get('seksi/delete/{id}','Admin\SeksiController@destroy');
-
-
-    Route::get('employee/employeelist','Admin\EmployeeController@getdata');
-    Route::get('employee', 'Admin\EmployeeController@index');
-    Route::post('employee', 'Admin\EmployeeController@store');
-    Route::get('employee/delete/{id}','Admin\EmployeeController@destroy');
-
+    Route::get('role/rolelist','Admin\RoleController@getdata');
+    Route::get('role', 'Admin\RoleController@index');
+    Route::post('role', 'Admin\RoleController@store');
+    Route::get('role/delete/{id}','Admin\RoleController@destroy');
 
     Route::get('activity/activitylist','Admin\ActivityController@getdata');
     Route::get('activity', 'Admin\ActivityController@index');
@@ -69,4 +70,15 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::get('activity_status/activitystatuslist/{id_activity}','Admin\ActivityStatusController@getdata');
     Route::post('activity_status/{id_activity}', 'Admin\ActivityStatusController@store');
     Route::get('activity_status/delete/{id}','Admin\ActivityStatusController@destroy');
+
+    Route::get('activity_template/{id_activity}', 'Admin\ActivityTemplateController@index');
+    Route::get('activity_template/activitytemplatelist/{id_activity}','Admin\ActivityTemplateController@getdata');
+    Route::post('activity_template/{id_activity}', 'Admin\ActivityTemplateController@store');
+    Route::get('activity_template/delete/{id}','Admin\ActivityTemplateController@destroy');
+
+
+    Route::get('user/userlist','Admin\UserController@getdata');
+    Route::get('user', 'Admin\UserController@index');
+    Route::post('user', 'Admin\UserController@store');
+    Route::get('user/delete/{id}','Admin\UserController@destroy');
 });

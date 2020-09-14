@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Position;
 use DataTables;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class PositionController extends Controller
@@ -65,6 +66,7 @@ class PositionController extends Controller
            return redirect('position');
 
         } catch(\Exception $e) {
+            Log::error($ex->getMessage());
         	\Session::flash('error.message', 'Failed to '.$message);
             return redirect('position');
         }

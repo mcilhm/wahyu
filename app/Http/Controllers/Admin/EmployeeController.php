@@ -6,11 +6,12 @@ use App\Employee;
 use App\Division;
 use App\Department;
 use App\Kelas;
-use App\Seksi;
-use App\Pendidikan;
+use App\Section;
+use App\Education;
 use App\Position;
 use DB;
 use DataTables;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -27,13 +28,13 @@ class EmployeeController extends Controller
         $division = Division::all();
         $department = Department::all();
         $kelas = Kelas::all();
-        $seksi = Seksi::all();
-        $pendidikan = Pendidikan::all();
+        $section = Section::all();
+        $education = Education::all();
         $position = Position::all();
         if($request->query('edit')){
             $employee = Employee::findOrFail($request->query('edit'));
         }
-        return view('pages.employee.index', compact('employee','division', 'department', 'kelas' ,'seksi', 'pendidikan', 'position'));
+        return view('pages.employee.index', compact('employee','division', 'department', 'kelas' ,'section', 'education', 'position'));
     }
 
     /**
@@ -68,11 +69,11 @@ class EmployeeController extends Controller
                     'kelas_id' => $request->kelas_id,
                     'position_id' => $request->position_id,
                     'department_id' => $request->department_id,
-                    'seksi_id' => $request->seksi_id,
+                    'section_id' => $request->section_id,
                     'job_status' => $request->job_status,
                     'date_of_entry' => $request->date_of_entry,
                     'date_of_birthday' => $request->date_of_birthday,
-                    'pendidikan_id' => $request->pendidikan_id,
+                    'education_id' => $request->education_id,
                     'work_location' => $request->work_location,
                     'marital_status' => $request->marital_status,
                     'gender' => $request->gender,
@@ -91,11 +92,11 @@ class EmployeeController extends Controller
                     'kelas_id' => $request->kelas_id,
                     'position_id' => $request->position_id,
                     'department_id' => $request->department_id,
-                    'seksi_id' => $request->seksi_id,
+                    'section_id' => $request->section_id,
                     'job_status' => $request->job_status,
                     'date_of_entry' => $request->date_of_entry,
                     'date_of_birthday' => $request->date_of_birthday,
-                    'pendidikan_id' => $request->pendidikan_id,
+                    'education_id' => $request->education_id,
                     'work_location' => $request->work_location,
                     'marital_status' => $request->marital_status,
                     'gender' => $request->gender,
@@ -110,6 +111,7 @@ class EmployeeController extends Controller
             return redirect('employee');
 
         } catch(\Exception $e) {
+            Log::error($ex->getMessage());
         	\Session::flash('error.message', 'Failed to '.$message);
             return redirect('employee');
         }
@@ -176,11 +178,11 @@ class EmployeeController extends Controller
                         a.`kelas_id`,
                         a.`position_id`,
                         a.`department_id`,
-                        a.`seksi_id`,
+                        a.`section_id`,
                         a.`job_status`,
                         a.`date_of_entry`,
                         a.`date_of_birthday`,
-                        a.`pendidikan_id`,
+                        a.`education_id`,
                         a.`work_location`,
                         a.`marital_status`,
                         a.`gender`,
@@ -194,16 +196,16 @@ class EmployeeController extends Controller
                         b.`name` division_name,
                         c.`name` department_name,
                         d.`name` kelas_name,
-                        e.`name` seksi_name,
+                        e.`name` section_name,
                         f.`name` position_name,
-                        g.`name` pendidikan_name
+                        g.`name` education_name
                         FROM `employee` A
                         INNER JOIN `division` B ON a.`division_id` = b.`id`
                         INNER JOIN `department` C ON a.`department_id` = C.`id`
                         INNER JOIN `kelas` D ON a.`kelas_id` = D.`id`
-                        INNER JOIN `seksi` E ON a.`seksi_id` = E.`id`
+                        INNER JOIN `section` E ON a.`section_id` = E.`id`
                         INNER JOIN `position` F ON a.`position_id` = F.`id`
-                        INNER JOIN `pendidikan` G ON a.`pendidikan_id` = G.`id`');
+                        INNER JOIN `education` G ON a.`education_id` = G.`id`');
         return Datatables::of($employee)
             ->addColumn('action',  function ($employee){
 

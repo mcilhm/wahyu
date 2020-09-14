@@ -39,15 +39,15 @@
                     <div class="white-box">
                         <h3 class="box-title m-b-0">Form</h3>
                         <p class="text-muted m-b-30 font-13"> Fill out the form correctly </p>
-                        {{ Form::open(array('action' => array('Admin\SeksiController@store'), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
-                            <input type="hidden" name="id" value="{{ isset($seksi->id) ? $seksi->id : null }}">
+                        {{ Form::open(array('action' => array('Admin\RoleController@store'), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
+                            <input type="hidden" name="id" value="{{ isset($role->id) ? $role->id : null }}">
                             <div class="form-group">
                                 <label class="control-label">Name</label>
-                                <input type="text" required="" class="form-control" placeholder="Name" name="name" value="{{ isset($seksi->name) ? $seksi->name : null }}">
+                                <input type="text" required="" class="form-control" placeholder="Name" name="name" value="{{ isset($role->name) ? $role->name : null }}">
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Description</label>
-                                <input type="text" required="" class="form-control" placeholder="Description" name="description" value="{{ isset($seksi->description) ? $seksi->description : null }}">
+                                <input type="text" required="" class="form-control" placeholder="Description" name="description" value="{{ isset($role->description) ? $role->description : null }}">
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
@@ -80,7 +80,7 @@
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
                 ajax : {
-                    "url": "seksi/seksilist"
+                    "url": "role/rolelist"
                 },
                 columns: [
                     {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},

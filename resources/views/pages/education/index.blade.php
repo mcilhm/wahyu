@@ -16,16 +16,16 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>No Reg (Employee)</th>
-                                        <th>Role Name</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
-                                        <th>No Reg (Employee)</th>
-                                        <th>Role Name</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
@@ -39,33 +39,19 @@
                     <div class="white-box">
                         <h3 class="box-title m-b-0">Form</h3>
                         <p class="text-muted m-b-30 font-13"> Fill out the form correctly </p>
-                        {{ Form::open(array('action' => array('Admin\UserController@store'), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
-                            <input type="hidden" name="id" value="{{ isset($user->id) ? $user->id : null }}">
+                        {{ Form::open(array('action' => array('Admin\EducationController@store'), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
+                            <input type="hidden" name="id" value="{{ isset($education->id) ? $education->id : null }}">
                             <div class="form-group">
-                                <label class="control-label">Employee No REG</label>
-                                <select class="form-control" name="username" required {{ isset($user->id) ? 'disabled' : '' }}>
-                                    <option>- Select -</option>
-                                    @foreach($employee as $row)
-                                    <option value="{{ $row->no_reg }}" <?php if(isset($user->username)) if($row->no_reg == $user->username){ echo "selected"; }?>>{{ $row->no_reg. ' ( '.$row->first_name.' '.$row->last_name.' )' }}</option>
-                                    @endforeach
-                                </select>
+                                <label class="control-label">Name</label>
+                                <input type="text" required="" class="form-control" placeholder="Name" name="name" value="{{ isset($education->name) ? $education->name : null }}">
                             </div>
                             <div class="form-group">
-                                <label class="control-label">Password <small>{{ isset($user->id) ? '(leave blank if you dont want to change it)' : '' }}</small></label>
-                                <input type="password" class="form-control" placeholder="Password" name="password" {{ isset($user->id) ? '' : 'required' }}>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Role ID</label>
-                                <select class="form-control" name="role_id" required>
-                                    <option>- Select -</option>
-                                    @foreach($role as $row)
-                                    <option value="{{ $row->id }}" <?php if(isset($user->role_id)) if($row->id == $user->role_id){ echo "selected"; }?>>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
+                                <label class="control-label">Description</label>
+                                <input type="text" required="" class="form-control" placeholder="Description" name="description" value="{{ isset($education->description) ? $education->description : null }}">
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
-                                <a href="{{ url('user') }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
+                                <a href="{{ url('education') }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
                             </div>
                         {{ Form::close() }}
                     </div>
@@ -95,12 +81,12 @@
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
                 ajax : {
-                    "url": "user/userlist"
+                    "url": "education/educationlist"
                 },
                 columns: [
                     {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},
-                    {data: 'username', name: 'username', searchable: true},
-                    {data: 'role_name', name: 'role_name', searchable: true},
+                    {data: 'name', name: 'name', searchable: true},
+                    {data: 'description', name: 'description', searchable: true},
                     {data: 'action', name: 'action', orderable: false}
                 ]
             });

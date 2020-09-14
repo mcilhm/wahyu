@@ -22,22 +22,22 @@
                             <a href="{{ url('home') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Home</span></a>
                         </li>
                         <li>
+                            <a href="{{ url('division') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Division</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ url('department') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Department</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ url('section') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Section</span></a>
+                        </li>
+                        <li>
                             <a href="{{ url('employee') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Employee</span></a>
                         </li>
                         <li>
                             <a href="{{ url('user') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> User</span></a>
                         </li>
                         <li>
-                            <a href="{{ url('division') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Division</span></a>
-                        </li>
-                        <li>
-                            <a href="{{ url('seksi') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Seksi</span></a>
-                        </li>
-                        <li>
-                            <a href="{{ url('department') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Department</span></a>
-                        </li>
-                        <li>
-                            <a href="{{ url('pendidikan') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Pendidikan</span></a>
+                            <a href="{{ url('education') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Education</span></a>
                         </li>
                         <li>
                             <a href="{{ url('position') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Position</span></a>
@@ -46,19 +46,12 @@
                             <a href="{{ url('kelas') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Kelas</span></a>
                         </li>
                         <li>
+                            <a href="{{ url('role') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Role</span></a>
+                        </li>
+                        <li>
                             <a href="{{ url('activity') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Activity</span></a>
                         </li>
                     @elseif(Auth::user()->user_type == 1)
-                        @php
-                        $menu = \App\Activity::all();
-                        @endphp
-
-                        @foreach($menu as $row)
-                        <li>
-                            <a href="{{ url($row->activity_slug) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
-                        </li>
-                        @endforeach
-                    @elseif(Auth::user()->user_type == 2)
                         @php
                         $menu = \App\Activity::all();
                         @endphp
@@ -74,7 +67,7 @@
                 </nav>
                 <div class="p-30">
                     <span class="hide-menu">
-                        <a href="{{ url('logout') }}" target="_blank" class="btn btn-default">Logout</a>
+                        <a href="{{ url('logout') }}" class="btn btn-default">Logout</a>
                     </span>
                 </div>
             </div>
