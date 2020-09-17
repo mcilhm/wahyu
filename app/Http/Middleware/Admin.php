@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class Admin
 {
@@ -39,7 +40,7 @@ class Admin
     {
 
         if (!Auth::check()) {
-            \Session::flash('error.message',  'You have no permission for this!');
+            Session::flash('error.message',  'You have no permission for this!');
             return redirect('/');
         }
 

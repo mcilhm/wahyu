@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\ActivityTemplate;
-use DataTables;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use Validator;
-use Image;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\DataTables;
 
 class ActivityTemplateController extends Controller
 {
@@ -18,12 +18,12 @@ class ActivityTemplateController extends Controller
      */
     public function index(Request $request, $id_activity)
     {
-        $activity="";
+        $activity = "";
         $idActivity = $id_activity;
-        if($request->query('edit')){
+        if ($request->query('edit')) {
             $activity = ActivityTemplate::findOrFail($request->query('edit'));
         }
-        return view('pages.activity_template.index', compact('activity','idActivity'));
+        return view('pages.activity_template.index', compact('activity', 'idActivity'));
     }
 
     /**
@@ -48,28 +48,25 @@ class ActivityTemplateController extends Controller
 
         try {
 
-            if(!empty($request->id))
-            {
+            if (!empty($request->id)) {
                 $activity_template = ActivityTemplate::findOrFail($request->id);
                 $activity_template->update([
                     'activity_id' => $id_activity,
                     'activity_template_name' => $request->activity_template_name
                 ]);
-            }
-            else{
+            } else {
                 $activity_template = ActivityTemplate::create([
                     'activity_id' => $id_activity,
                     'activity_template_name' => $request->activity_template_name
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to Add');
-            return redirect('activity_template/'.$id_activity);
-
-        } catch(\Exception $e) {
-            Log::error($ex->getMessage());
-        	\Session::flash('error.message', 'Failed to Add');
-            return redirect('activity_template/'.$id_activity);
+            Session::flash('success.message', 'Success to Add');
+            return redirect('activity_template/' . $id_activity);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to Add');
+            return redirect('activity_template/' . $id_activity);
         }
     }
 
@@ -118,25 +115,24 @@ class ActivityTemplateController extends Controller
         $delete = ActivityTemplate::findOrFail($id);
         $delete->delete();
 
-        \Session::flash('success.message', trans("Success To Delete"));
+        Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
 
     public function getdata($id_activity)
     {
-    	$ActivityTemplate = ActivityTemplate::where('activity_id', $id_activity)->get();
+        $ActivityTemplate = ActivityTemplate::where('activity_id', $id_activity)->get();
         return Datatables::of($ActivityTemplate)
-            ->addColumn('action',  function ($ActivityTemplate) use($id_activity){
+            ->addColumn('action',  function ($ActivityTemplate) use ($id_activity) {
 
-            	$action = '<div class="btn-group"> <a href="'.$id_activity.'/?edit='.$ActivityTemplate->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                    <a href="delete/'.$ActivityTemplate->id.'"  data-id="'.$ActivityTemplate->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+                $action = '<div class="btn-group"> <a href="' . $id_activity . '/?edit=' . $ActivityTemplate->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                    <a href="delete/' . $ActivityTemplate->id . '"  data-id="' . $ActivityTemplate->id . '" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
                     </div>';
                 return $action;
             })
 
             ->rawColumns(['action'])
             ->make(true);
-
     }
 }

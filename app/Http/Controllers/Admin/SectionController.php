@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Section;
 use App\Department;
-use DataTables;
-use DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\DataTables;
 
 class SectionController extends Controller
 {
@@ -18,9 +20,9 @@ class SectionController extends Controller
      */
     public function index(Request $request)
     {
-        $section="";
+        $section = "";
         $department = Department::all();
-        if($request->query('edit')){
+        if ($request->query('edit')) {
             $section = Section::findOrFail($request->query('edit'));
         }
         return view('pages.section.index', compact('section', 'department'));
@@ -47,8 +49,7 @@ class SectionController extends Controller
     {
         $message = "";
         try {
-            if(!empty($request->id))
-            {
+            if (!empty($request->id)) {
                 $message = "Edit";
                 $section = Section::findOrFail($request->id);
                 $section->update([
@@ -56,9 +57,7 @@ class SectionController extends Controller
                     'description' => $request->description,
                     'department_id' => $request->department_id
                 ]);
-            }
-            else
-            {
+            } else {
                 $message = "Add";
                 $section = Section::create([
                     'name' => $request->name,
@@ -67,12 +66,11 @@ class SectionController extends Controller
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to '.$message);
-           return redirect('section');
-
-        } catch(\Exception $e) {
-            Log::error($ex->getMessage());
-        	\Session::flash('error.message', 'Failed to '.$message);
+            Session::flash('success.message', 'Success to ' . $message);
+            return redirect('section');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to ' . $message);
             return redirect('section');
         }
     }
@@ -122,13 +120,13 @@ class SectionController extends Controller
         $delete = section::findOrFail($id);
         $delete->delete();
 
-        \Session::flash('success.message', trans("Success To Delete"));
+        Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
     public function getdata()
     {
-    	// $section = section::all();
+        // $section = section::all();
         $section = DB::select('SELECT
                         A.`id`,
                         A.`name`,
@@ -140,14 +138,13 @@ class SectionController extends Controller
 
             ->addColumn('action',  function ($section) {
 
-            	$action = '<div class="btn-group"> <a href="section?edit='.$section->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                <a href="section/delete/'.$section->id.'"  data-id="'.$section->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+                $action = '<div class="btn-group"> <a href="section?edit=' . $section->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="section/delete/' . $section->id . '"  data-id="' . $section->id . '" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
 
                 return $action;
             })
 
             ->rawColumns(['action'])
             ->make(true);
-
     }
 }

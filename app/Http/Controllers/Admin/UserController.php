@@ -1,14 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Role;
 use App\Employee;
-use DataTables;
-use DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -19,17 +21,17 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $user="";
-        $role= Role::All();
+        $user = "";
+        $role = Role::All();
         $employee = DB::table('employee')
-           ->whereNotExists(function ($query) {
-               $query->select('users.username')
-                     ->from('users')
-                     ->whereRaw('employee.no_reg = users.username');
-           })
-           ->get();
+            ->whereNotExists(function ($query) {
+                $query->select('users.username')
+                    ->from('users')
+                    ->whereRaw('employee.no_reg = users.username');
+            })
+            ->get();
 
-        if($request->query('edit')){
+        if ($request->query('edit')) {
             $user = User::findOrFail($request->query('edit'));
             $employee = Employee::All();
         }
@@ -57,27 +59,21 @@ class UserController extends Controller
     {
         $message = "";
         try {
-            if(!empty($request->id))
-            {
+            if (!empty($request->id)) {
                 $message = "Edit";
                 $user = User::findOrFail($request->id);
 
-                if(empty($request->password))
-                {
+                if (empty($request->password)) {
                     $user->update([
                         'role_id' => $request->role_id,
                     ]);
-                }
-                else
-                {
+                } else {
                     $user->update([
                         'password' => bcrypt($request->password),
                         'role_id' => $request->role_id,
                     ]);
                 }
-            }
-            else
-            {
+            } else {
                 $message = "Add";
                 $employee = Employee::where('no_reg', $request->username)->first();
                 $user = User::create([
@@ -89,12 +85,11 @@ class UserController extends Controller
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to '.$message);
-           return redirect('user');
-
-        } catch(\Exception $ex) {
-            Log::error($ex->getMessage());
-        	\Session::flash('error.message', 'Failed to '.$message);
+            Session::flash('success.message', 'Success to ' . $message);
+            return redirect('user');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to ' . $message);
             return redirect('user');
         }
     }
@@ -144,13 +139,12 @@ class UserController extends Controller
         $delete = User::findOrFail($id);
         $delete->delete();
 
-        \Session::flash('success.message', trans("Success To Delete"));
+        Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
     public function getdata()
     {
-    	$user = User::all();
         $user = DB::select('SELECT
                     A.`id`,
                     A.`username`,
@@ -161,14 +155,13 @@ class UserController extends Controller
 
             ->addColumn('action',  function ($user) {
 
-            	$action = '<div class="btn-group"> <a href="user?edit='.$user->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                <a href="user/delete/'.$user->id.'"  data-id="'.$user->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+                $action = '<div class="btn-group"> <a href="user?edit=' . $user->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="user/delete/' . $user->id . '"  data-id="' . $user->id . '" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
 
                 return $action;
             })
 
             ->rawColumns(['action'])
             ->make(true);
-
     }
 }

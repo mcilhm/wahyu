@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
+
 use App\Role;
-use DataTables;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\DataTables;
 
 class RoleController extends Controller
 {
@@ -16,8 +18,8 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $role="";
-        if($request->query('edit')){
+        $role = "";
+        if ($request->query('edit')) {
             $role = Role::findOrFail($request->query('edit'));
         }
         return view('pages.role.index', compact('role'));
@@ -44,17 +46,14 @@ class RoleController extends Controller
     {
         $message = "";
         try {
-            if(!empty($request->id))
-            {
+            if (!empty($request->id)) {
                 $message = "Edit";
                 $role = Role::findOrFail($request->id);
                 $role->update([
                     'name' => $request->name,
                     'description' => $request->description,
                 ]);
-            }
-            else
-            {
+            } else {
                 $message = "Add";
                 $role = Role::create([
                     'name' => $request->name,
@@ -62,12 +61,11 @@ class RoleController extends Controller
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to '.$message);
-           return redirect('role');
-
-        } catch(\Exception $e) {
-            Log::error($ex->getMessage());
-        	\Session::flash('error.message', 'Failed to '.$message);
+            Session::flash('success.message', 'Success to ' . $message);
+            return redirect('role');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to ' . $message);
             return redirect('role');
         }
     }
@@ -117,25 +115,24 @@ class RoleController extends Controller
         $delete = role::findOrFail($id);
         $delete->delete();
 
-        \Session::flash('success.message', trans("Success To Delete"));
+        Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
     public function getdata()
     {
-    	$role = Role::all();
-        return Datatables::of($role)
+        $role = Role::all();
+        return DataTables::of($role)
 
             ->addColumn('action',  function ($role) {
 
-            	$action = '<div class="btn-group"> <a href="role?edit='.$role->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                <a href="role/delete/'.$role->id.'"  data-id="'.$role->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+                $action = '<div class="btn-group"> <a href="role?edit=' . $role->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="role/delete/' . $role->id . '"  data-id="' . $role->id . '" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
 
                 return $action;
             })
 
             ->rawColumns(['action'])
             ->make(true);
-
     }
 }

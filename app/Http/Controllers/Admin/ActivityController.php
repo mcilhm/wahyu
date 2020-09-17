@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Activity;
-use DataTables;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\DataTables;
 
 class ActivityController extends Controller
 {
@@ -17,8 +18,8 @@ class ActivityController extends Controller
      */
     public function index(Request $request)
     {
-        $activity="";
-        if($request->query('edit')){
+        $activity = "";
+        if ($request->query('edit')) {
             $activity = Activity::findOrFail($request->query('edit'));
         }
         return view('pages.activity.index', compact('activity'));
@@ -46,8 +47,7 @@ class ActivityController extends Controller
 
         try {
 
-            if(!empty($request->id))
-            {
+            if (!empty($request->id)) {
                 $activity = Activity::findOrFail($request->id);
                 $activity->update([
                     'activity_name' => $request->activity_name,
@@ -55,8 +55,7 @@ class ActivityController extends Controller
                     'activity_before_day' => $request->activity_before_day,
                     'activity_slug' => $request->activity_slug
                 ]);
-            }
-            else{
+            } else {
                 $activity = Activity::create([
                     'activity_name' => $request->activity_name,
                     'activity_description' => $request->activity_description,
@@ -65,12 +64,11 @@ class ActivityController extends Controller
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to Add');
-           return redirect('activity');
-
-        } catch(\Exception $e) {
-            Log::error($ex->getMessage());
-        	\Session::flash('error.message', 'Failed to Add');
+            Session::flash('success.message', 'Success to Add');
+            return redirect('activity');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to Add');
             return redirect('activity');
         }
     }
@@ -120,28 +118,26 @@ class ActivityController extends Controller
         $delete = Activity::findOrFail($id);
         $delete->delete();
 
-        \Session::flash('success.message', trans("Success To Delete"));
+        Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
 
     public function getdata()
     {
-    	$activity = Activity::all();
+        $activity = Activity::all();
         return Datatables::of($activity)
 
             ->addColumn('action',  function ($activity) {
 
-            	$action = '<div class="btn-group"> <a href="activity?edit='.$activity->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                    <a href="activity_template/'.$activity->id.'" title="Template" class="btn btn-xs btn-info"><i class="fa fa-file"></i></a>
-                    <a href="activity_status/'.$activity->id.'" title="Status" class="btn btn-xs btn-warning"><i class="fa fa-eye"></i></a>
-                    <a href="activity/delete/'.$activity->id.'"  data-id="'.$activity->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+                $action = '<div class="btn-group"> <a href="activity?edit=' . $activity->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                    <a href="activity_template/' . $activity->id . '" title="Template" class="btn btn-xs btn-info"><i class="fa fa-file"></i></a>
+                   <a href="activity/delete/' . $activity->id . '"  data-id="' . $activity->id . '" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
                     </div>';
                 return $action;
             })
 
             ->rawColumns(['action'])
             ->make(true);
-
     }
 }

@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Division;
 use App\Department;
-use DataTables;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\DataTables;
 
 class DivisionController extends Controller
 {
@@ -17,8 +19,8 @@ class DivisionController extends Controller
      */
     public function index(Request $request)
     {
-        $division="";
-        if($request->query('edit')){
+        $division = "";
+        if ($request->query('edit')) {
             $division = Division::findOrFail($request->query('edit'));
         }
         return view('pages.division.index', compact('division'));
@@ -45,17 +47,14 @@ class DivisionController extends Controller
     {
         $message = "";
         try {
-            if(!empty($request->id))
-            {
+            if (!empty($request->id)) {
                 $message = "Edit";
                 $division = Division::findOrFail($request->id);
                 $division->update([
                     'name' => $request->name,
                     'description' => $request->description,
                 ]);
-            }
-            else
-            {
+            } else {
                 $message = "Add";
                 $division = Division::create([
                     'name' => $request->name,
@@ -63,12 +62,11 @@ class DivisionController extends Controller
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to '.$message);
-           return redirect('division');
-
-        } catch(\Exception $e) {
-            Log::error($ex->getMessage());
-        	\Session::flash('error.message', 'Failed to '.$message);
+            Session::flash('success.message', 'Success to ' . $message);
+            return redirect('division');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to ' . $message);
             return redirect('division');
         }
     }
@@ -118,29 +116,29 @@ class DivisionController extends Controller
         $delete = Division::findOrFail($id);
         $delete->delete();
 
-        \Session::flash('success.message', trans("Success To Delete"));
+        Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
     public function getdata()
     {
-    	$division = Division::all();
+        $division = Division::all();
         return Datatables::of($division)
 
             ->addColumn('action',  function ($division) {
 
-            	$action = '<div class="btn-group"> <a href="division?edit='.$division->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                <a href="division/delete/'.$division->id.'"  data-id="'.$division->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+                $action = '<div class="btn-group"> <a href="division?edit=' . $division->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="division/delete/' . $division->id . '"  data-id="' . $division->id . '" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
 
                 return $action;
             })
 
             ->rawColumns(['action'])
             ->make(true);
-
     }
 
-    public function getDepartment($id) {
+    public function getDepartment($id)
+    {
         return Department::select('id', 'name')->where('division_id', $id)->get();
     }
 }

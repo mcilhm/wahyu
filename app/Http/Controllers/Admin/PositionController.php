@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Position;
-use DataTables;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\DataTables;
 
 class PositionController extends Controller
 {
@@ -16,8 +18,8 @@ class PositionController extends Controller
      */
     public function index(Request $request)
     {
-        $position="";
-        if($request->query('edit')){
+        $position = "";
+        if ($request->query('edit')) {
             $position = Position::findOrFail($request->query('edit'));
         }
         return view('pages.position.index', compact('position'));
@@ -44,17 +46,14 @@ class PositionController extends Controller
     {
         $message = "";
         try {
-            if(!empty($request->id))
-            {
+            if (!empty($request->id)) {
                 $message = "Edit";
                 $position = Position::findOrFail($request->id);
                 $position->update([
                     'name' => $request->name,
                     'description' => $request->description,
                 ]);
-            }
-            else
-            {
+            } else {
                 $message = "Add";
                 $position = Position::create([
                     'name' => $request->name,
@@ -62,12 +61,11 @@ class PositionController extends Controller
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to '.$message);
-           return redirect('position');
-
-        } catch(\Exception $e) {
-            Log::error($ex->getMessage());
-        	\Session::flash('error.message', 'Failed to '.$message);
+            Session::flash('success.message', 'Success to ' . $message);
+            return redirect('position');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to ' . $message);
             return redirect('position');
         }
     }
@@ -117,25 +115,24 @@ class PositionController extends Controller
         $delete = Position::findOrFail($id);
         $delete->delete();
 
-        \Session::flash('success.message', trans("Success To Delete"));
+        Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
     public function getdata()
     {
-    	$position = Position::all();
+        $position = Position::all();
         return Datatables::of($position)
 
             ->addColumn('action',  function ($position) {
 
-            	$action = '<div class="btn-group"> <a href="position?edit='.$position->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                <a href="position/delete/'.$position->id.'"  data-id="'.$position->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+                $action = '<div class="btn-group"> <a href="position?edit=' . $position->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="position/delete/' . $position->id . '"  data-id="' . $position->id . '" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
 
                 return $action;
             })
 
             ->rawColumns(['action'])
             ->make(true);
-
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
-use App\ActivityStatus;
+
 use App\Division;
-use DataTables;
-use Illuminate\Support\Facades\Log;
+use App\ActivityStatus;
 use Illuminate\Http\Request;
-use Validator;
-use Image;
+use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
 class ActivityStatusController extends Controller
 {
@@ -19,13 +19,13 @@ class ActivityStatusController extends Controller
      */
     public function index(Request $request, $id_activity)
     {
-        $activity="";
+        $activity = "";
         $idActivity = $id_activity;
         $division = Division::all();
-        if($request->query('edit')){
+        if ($request->query('edit')) {
             $activity = ActivityStatus::findOrFail($request->query('edit'));
         }
-        return view('pages.activity_status.index', compact('activity','idActivity','division'));
+        return view('pages.activity_status.index', compact('activity', 'idActivity', 'division'));
     }
 
     /**
@@ -50,16 +50,14 @@ class ActivityStatusController extends Controller
 
         try {
 
-            if(!empty($request->id))
-            {
+            if (!empty($request->id)) {
                 $activity_status = ActivityStatus::findOrFail($request->id);
                 $activity_status->update([
                     'activity_id' => $id_activity,
                     'activity_status_name' => $request->activity_status_name,
                     'division_id' => $request->division_id
                 ]);
-            }
-            else{
+            } else {
                 $activity_status = ActivityStatus::create([
                     'activity_id' => $id_activity,
                     'activity_status_name' => $request->activity_status_name,
@@ -67,13 +65,12 @@ class ActivityStatusController extends Controller
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to Add');
-            return redirect('activity_status/'.$id_activity);
-
-        } catch(\Exception $e) {
-            Log::error($ex->getMessage());
-        	\Session::flash('error.message', 'Failed to Add');
-            return redirect('activity_status/'.$id_activity);
+            Session::flash('success.message', 'Success to Add');
+            return redirect('activity_status/' . $id_activity);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to Add');
+            return redirect('activity_status/' . $id_activity);
         }
     }
 
@@ -122,25 +119,30 @@ class ActivityStatusController extends Controller
         $delete = ActivityStatus::findOrFail($id);
         $delete->delete();
 
-        \Session::flash('success.message', trans("Success To Delete"));
+        Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
 
+    /**
+     * Get List data for grid in blade
+     *
+     * @param int $id_activity
+     * @return list json
+     */
     public function getdata($id_activity)
     {
-    	$activityStatus = ActivityStatus::where('activity_id', $id_activity)->get();
-        return Datatables::of($activityStatus)
-            ->addColumn('action',  function ($activityStatus) use($id_activity){
+        $activityStatus = ActivityStatus::where('activity_id', $id_activity)->get();
+        return DataTables::of($activityStatus)
+            ->addColumn('action',  function ($activityStatus) use ($id_activity) {
 
-            	$action = '<div class="btn-group"> <a href="'.$id_activity.'/?edit='.$activityStatus->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                    <a href="delete/'.$activityStatus->id.'"  data-id="'.$activityStatus->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+                $action = '<div class="btn-group"> <a href="' . $id_activity . '/?edit=' . $activityStatus->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                    <a href="delete/' . $activityStatus->id . '"  data-id="' . $activityStatus->id . '" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
                     </div>';
                 return $action;
             })
 
             ->rawColumns(['action'])
             ->make(true);
-
     }
 }

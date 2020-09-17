@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Employee;
 use App\Division;
@@ -9,11 +10,11 @@ use App\Kelas;
 use App\Section;
 use App\Education;
 use App\Position;
-use DB;
-use DataTables;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\DataTables;
 
 class EmployeeController extends Controller
 {
@@ -24,17 +25,17 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $employee="";
+        $employee = "";
         $division = Division::all();
         $department = Department::all();
         $kelas = Kelas::all();
         $section = Section::all();
         $education = Education::all();
         $position = Position::all();
-        if($request->query('edit')){
+        if ($request->query('edit')) {
             $employee = Employee::findOrFail($request->query('edit'));
         }
-        return view('pages.employee.index', compact('employee','division', 'department', 'kelas' ,'section', 'education', 'position'));
+        return view('pages.employee.index', compact('employee', 'division', 'department', 'kelas', 'section', 'education', 'position'));
     }
 
     /**
@@ -58,8 +59,7 @@ class EmployeeController extends Controller
         $message = "";
         try {
 
-            if(!empty($request->id))
-            {
+            if (!empty($request->id)) {
                 $message = "Edit";
                 $employee = Employee::findOrFail($request->id);
                 $employee->update([
@@ -82,8 +82,7 @@ class EmployeeController extends Controller
                     'status' => $request->status,
                     'division_id' => $request->division_id
                 ]);
-            }
-            else{
+            } else {
                 $message = "Add";
                 $employee = Employee::create([
                     'no_reg' => $request->no_reg,
@@ -107,12 +106,11 @@ class EmployeeController extends Controller
                 ]);
             }
 
-            \Session::flash('success.message', 'Success to '.$message);
+            Session::flash('success.message', 'Success to ' . $message);
             return redirect('employee');
-
-        } catch(\Exception $e) {
-            Log::error($ex->getMessage());
-        	\Session::flash('error.message', 'Failed to '.$message);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to ' . $message);
             return redirect('employee');
         }
     }
@@ -162,7 +160,7 @@ class EmployeeController extends Controller
         $delete = Employee::findOrFail($id);
         $delete->delete();
 
-        \Session::flash('success.message', trans("Success To Delete"));
+        Session::flash('success.message', trans("Success To Delete"));
 
         return redirect()->back();
     }
@@ -207,15 +205,14 @@ class EmployeeController extends Controller
                         INNER JOIN `position` F ON a.`position_id` = F.`id`
                         INNER JOIN `education` G ON a.`education_id` = G.`id`');
         return Datatables::of($employee)
-            ->addColumn('action',  function ($employee){
+            ->addColumn('action',  function ($employee) {
 
-            	$action = '<div class="btn-group"> <a href="employee?edit='.$employee->id.'" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                <a href="employee/delete/'.$employee->id.'"  data-id="'.$employee->id.'" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
+                $action = '<div class="btn-group"> <a href="employee?edit=' . $employee->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                <a href="employee/delete/' . $employee->id . '"  data-id="' . $employee->id . '" title="Delete" class="sa-remove btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></div>';
 
                 return $action;
             })
             ->rawColumns(['action'])
             ->make(true);
-
     }
 }
