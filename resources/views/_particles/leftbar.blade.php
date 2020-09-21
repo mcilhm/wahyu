@@ -58,7 +58,7 @@
 
                         @foreach($menu as $row)
                         <li>
-                            <a href="{{ url($row->activity_slug) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                            <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
                         </li>
                         @endforeach
                     @endif
