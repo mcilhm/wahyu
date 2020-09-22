@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Employee;
-use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -53,7 +53,7 @@ class LoginController extends Controller
     }
     public function logout()
     {
-        \Auth::logout();
+        Auth::logout();
 
         return redirect('/');
     }
@@ -74,14 +74,15 @@ class LoginController extends Controller
             if(Auth::user()->user_type == 1){
                 $employee = Employee::where('id',Auth::user()->employee_id)->first();
                 $request->session()->put([
-                    'role_id' => $employee->role_id
+                    'no_reg' => $employee->no_reg,
+                    'employee_name' => $employee->first_name." ".$employee->last_name
                 ]);
             }
             return redirect('home');
         }
         else
         {
-            \Session::flash('error.message', 'Username or Password are wrong.');
+            Session::flash('error.message', 'Username or Password are wrong.');
             return redirect('/');
         }
 

@@ -20,10 +20,29 @@
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Division</th>
-                                        <th>Class</th>
-                                        <th>Position</th>
                                         <th>Department</th>
                                         <th>Section</th>
+                                        <th>Class</th>
+                                        <th>Position</th>
+                                        <th>Job Status</th>
+                                        <th>Date Of Entry</th>
+                                        <th>Date Of Birthday</th>
+                                        <th>Education</th>
+                                        <th>Work Location</th>
+                                        <th>Marital Status</th>
+                                        <th>Genderr</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Status</th>
+                                        <th>Action</th><th>#</th>
+                                        <th>No Reg</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Division</th>
+                                        <th>Department</th>
+                                        <th>Section</th>
+                                        <th>Class</th>
+                                        <th>Position</th>
                                         <th>Job Status</th>
                                         <th>Date Of Entry</th>
                                         <th>Date Of Birthday</th>
@@ -44,10 +63,10 @@
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Division</th>
-                                        <th>Class</th>
-                                        <th>Position</th>
                                         <th>Department</th>
                                         <th>Section</th>
+                                        <th>Class</th>
+                                        <th>Position</th>
                                         <th>Job Status</th>
                                         <th>Date Of Entry</th>
                                         <th>Date Of Birthday</th>

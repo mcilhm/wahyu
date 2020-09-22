@@ -44,21 +44,44 @@ class ActivityTemplateController extends Controller
      */
     public function store(Request $request, $id_activity)
     {
-        $inputs = $request->all();
-
         try {
 
+            $tmpFolderPath = 'upload/file/';
             if (!empty($request->id)) {
                 $activity_template = ActivityTemplate::findOrFail($request->id);
-                $activity_template->update([
-                    'activity_id' => $id_activity,
-                    'activity_template_name' => $request->activity_template_name
-                ]);
+                if ($request->hasfile('file_template')) {
+                    $fileName = str_replace(' ', '-', $request->activity_template_name) . '-' . time() . '.' . $request->file_template->getClientOriginalExtension();
+
+                    $request->file_template->move($tmpFolderPath, $fileName);
+
+                    $activity_template->update([
+                        'activity_id' => $id_activity,
+                        'activity_template_name' => $request->activity_template_name,
+                        'activity_template_file' => $tmpFolderPath . $fileName
+                    ]);
+                } else {
+                    $activity_template->update([
+                        'activity_id' => $id_activity,
+                        'activity_template_name' => $request->activity_template_name
+                    ]);
+                }
             } else {
-                $activity_template = ActivityTemplate::create([
-                    'activity_id' => $id_activity,
-                    'activity_template_name' => $request->activity_template_name
-                ]);
+                if ($request->hasfile('file_template')) {
+                    $fileName = str_replace(' ', '-', $request->activity_template_name) . '-' . time() . '.' . $request->file_template->getClientOriginalExtension();
+
+                    $request->file_template->move($tmpFolderPath, $fileName);
+
+                    $activity_template = ActivityTemplate::create([
+                        'activity_id' => $id_activity,
+                        'activity_template_name' => $request->activity_template_name,
+                        'activity_template_file' => $tmpFolderPath . $fileName
+                    ]);
+                } else {
+                    $activity_template = ActivityTemplate::create([
+                        'activity_id' => $id_activity,
+                        'activity_template_name' => $request->activity_template_name
+                    ]);
+                }
             }
 
             Session::flash('success.message', 'Success to Add');

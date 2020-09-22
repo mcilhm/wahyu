@@ -30,7 +30,6 @@ class UserController extends Controller
                     ->whereRaw('employee.no_reg = users.username');
             })
             ->get();
-
         if ($request->query('edit')) {
             $user = User::findOrFail($request->query('edit'));
             $employee = Employee::All();

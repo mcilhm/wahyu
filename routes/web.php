@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Routing\Route;
-
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,7 +41,6 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::post('employee', 'Admin\EmployeeController@store');
     Route::get('employee/delete/{id}', 'Admin\EmployeeController@destroy');
 
-
     Route::get('kelas/kelaslist', 'Admin\KelasController@getdata');
     Route::get('kelas', 'Admin\KelasController@index');
     Route::post('kelas', 'Admin\KelasController@store');
@@ -78,12 +76,14 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::post('activity_template/{id_activity}', 'Admin\ActivityTemplateController@store');
     Route::get('activity_template/delete/{id}', 'Admin\ActivityTemplateController@destroy');
 
-
     Route::get('user/userlist', 'Admin\UserController@getdata');
     Route::get('user', 'Admin\UserController@index');
     Route::post('user', 'Admin\UserController@store');
     Route::get('user/delete/{id}', 'Admin\UserController@destroy');
 
+    Route::get('submissionemployee/{status}/submissionlist', 'Admin\SubmissionEmployeeController@getdata');
+    Route::get('submissionemployee/{status}/{id}', 'Admin\SubmissionEmployeeController@store');
+    Route::get('submissionemployee/{status}', 'Admin\SubmissionEmployeeController@index');
 
     Route::get('submission/{id}/submissionlist', 'Admin\SubmissionController@getdata');
     Route::get('submission/{id}', 'Admin\SubmissionController@index');

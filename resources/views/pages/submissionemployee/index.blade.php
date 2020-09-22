@@ -1,8 +1,3 @@
-@php
-// DB::enableQueryLog(); // Enable query log
-$submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee_id)->whereNotIn('status_of_submission', [5,6])->count();
-// dd(DB::getQueryLog()); // Show results of log
-@endphp
 
 @extends("app")
 @section("content")
@@ -11,11 +6,7 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
         <div class="container-fluid">
             <!-- /row -->
             <div class="row">
-                @if ($submissions == 0)
-                    <div class="col-sm-8">
-                @else
-                    <div class="col-sm-12">
-                @endif
+                <div class="col-sm-12">
                     <div class="white-box">
                         <h3 class="box-title m-b-0">Data Export</h3>
                         <p class="text-muted m-b-30">Export data to Copy, CSV, Excel, PDF & Print</p>
@@ -50,25 +41,6 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                     </div>
                 </div>
 
-                @if ($submissions == 0)
-                <div class="col-sm-4">
-                    <div class="white-box">
-                        <h3 class="box-title m-b-0">Form</h3>
-                        <p class="text-muted m-b-30 font-13"> Fill out the form correctly </p>
-                        {{ Form::open(array('action' => array('Admin\SubmissionController@store', $id_activity), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
-                            <div class="form-group">
-                                <label class="control-label">Reason of Submission</label>
-                                <input type="text" required="" class="form-control" placeholder="Description" name="reason_of_submission">
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
-                                <a href="{{ url('submission/'.$id_activity) }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
-                            </div>
-                        {{ Form::close() }}
-                    </div>
-                </div>
-                @endif
-
             </div>
             <!-- /.row -->
             <!-- ===== Right-Sidebar ===== -->
@@ -94,7 +66,7 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
                 ajax : {
-                    "url": "/submission/" + {{ $id_activity }} + "/submissionlist"
+                    "url": "/submissionemployee/" + {{ $status_of_submission }} + "/submissionlist"
                 },
                 columns: [
                     {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},

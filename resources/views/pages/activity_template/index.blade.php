@@ -15,6 +15,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Activity Template Name</th>
+                                        <th>Activity Template File</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -22,6 +23,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Activity Template Name</th>
+                                        <th>Activity Template File</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
@@ -36,15 +38,19 @@
                     <div class="white-box">
                         <h3 class="box-title m-b-0">Form</h3>
                         <p class="text-muted m-b-30 font-13"> Fill out the form correctly </p>
-                        {{ Form::open(array('action' => array('Admin\ActivityTemplateController@store', $idActivity), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
+                        {{ Form::open(array('action' => array('Admin\ActivityTemplateController@store', $idActivity), 'method' => 'POST' ,'class' => 'form-horizontal','files'=> true)) }}
                             <input type="hidden" name="id" value="{{ isset($activity->id) ? $activity->id : null }}">
                             <div class="form-group">
                                 <label class="control-label">Name</label>
-                                <input type="text" required="" class="form-control" placeholder="Name" name="activity_template_name" value="{{ isset($activity->activity_template_name) ? $activity->activity_status_name : null }}">
+                                <input type="text" required="" class="form-control" placeholder="Name" name="activity_template_name" value="{{ isset($activity->activity_template_name) ? $activity->activity_template_name : null }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">File Template</label>
+                                <input type="file" class="form-control" name="file_template"  accept=".docx,.doc" aria-label="Choose File">
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
-                                <a href="{{ url('activity_template') }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
+                                <a href="{{ url('activity_template/'.$idActivity) }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
                             </div>
                         {{ Form::close() }}
                     </div>
@@ -80,6 +86,7 @@
                 columns: [
                     {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},
                     {data: 'activity_template_name', name: 'activity_template_name', searchable: true},
+                    {data: 'activity_template_file', name: 'activity_template_file', searchable: true},
                     {data: 'action', name: 'action', orderable: false}
                 ]
             });

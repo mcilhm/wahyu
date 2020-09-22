@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
 use App\Submission;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class SubmissionController extends Controller
+class SubmissionEmployeeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,14 +18,11 @@ class SubmissionController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index(Request $request, $activity)
+    public function index(Request $request, $status)
     {
-        $id_activity = $activity;
-        $submission = "";
-        if ($request->query('edit')) {
-            $submission = Submission::findOrFail($request->query('edit'));
-        }
-        return view('pages.submission.index', compact('submission', 'id_activity'));
+        $status_of_submission = $status;
+        $submission = Submission::where('status_of_submission', $status);
+        return view('pages.submissionemployee.index', compact('submission', 'status_of_submission'));
     }
 
     /**
@@ -37,41 +32,38 @@ class SubmissionController extends Controller
      */
     public function create()
     {
-        return view('pages.submission.create');
+        return view('pages.submissionemployee.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id_activity)
+    public function store($status, $id_submission)
     {
-        $inputs = $request->all();
-
         try {
+            if (!empty($id_submission)) {
 
-            $submission = Submission::create([
-                'id_employee' => Auth::user()->employee_id,
-                'id_activity' => $id_activity,
-                'date_of_submission' => Carbon::now(),
-                'reason_of_submission' => $request->reason_of_submission
-            ]);
+                if ($status == 1) $status = 2;
+                $message = "Edit";
+                $submission = Submission::findOrFail($id_submission);
+                $submission->update(['status_of_submission' => $status]);
+            }
 
-            Session::flash('success.message', 'Success to create submission');
-            return redirect('submission/' . $id_activity);
+            Session::flash('success.message', 'Success to update status submission');
+            return redirect('submissionemployee/' . ($status - 1));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            Session::flash('error.message', 'Failed to create submission');
-            return redirect('submission/' . $id_activity);
+            Session::flash('error.message', 'Failed to update status submission');
+            return redirect('submissionemployee/' . ($status - 1));
         }
     }
 
     /**
      * method for set data in datagrid blade
      */
-    public function getdata($id_activity)
+    public function getdata($status)
     {
         //$Submission = Submission::where('id_employee', $id_employee)->get();
 
@@ -86,8 +78,7 @@ class SubmissionController extends Controller
                         FROM `submission` A
                         INNER JOIN `employee` B ON A.`id_employee` = B.`id`
                         INNER JOIN `activity` C ON A.`id_activity` = C.`id`
-                        WHERE a.`id_activity` = :id_activity
-                        AND a.`id_employee` = :id_employee', ['id_activity' => $id_activity, 'id_employee' => Auth::user()->employee_id]);
+                        WHERE a.`status_of_submission` = :status_of_submission', ['status_of_submission' => $status]);
         return Datatables::of($submission)
 
             ->addColumn('action',  function ($submission) {
@@ -115,10 +106,10 @@ class SubmissionController extends Controller
                     $style_btn = "btn-danger";
                     $name_btn = "failed";
                 }
-                $action = '<div class="btn-group"><span class="btn btn-xs ' . $style_btn . '">' . $name_btn . '</span></div>';
+                $action = '<div class="btn-group">
+                <a href="' . ($submission->status_of_submission + 1) . '/' . $submission->id . '"  data-id="' . $submission->status_of_submission . '" title="Submit" class="sa-submit btn btn-xs ' . $style_btn . '">' . $name_btn . '</i></a></div>';
                 return $action;
             })
-
             ->rawColumns(['action'])
             ->make(true);
     }

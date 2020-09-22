@@ -28,4 +28,23 @@
             window.location.href = url;
         });
     });
+
+    $('body').on('click', '.sa-submit', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        var postId = $(this).data('id');
+        swal({
+            title: "Apa kamu yakin?",
+            html: true,
+            showCancelButton: true,
+            confirmButtonClass: 'btn-primry waves-effect waves-light',
+            confirmButtonText: "Submit",
+            cancelButtonText: "Cancel",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+        function(){
+            window.location.href = url;
+        });
+    });
 </script>
