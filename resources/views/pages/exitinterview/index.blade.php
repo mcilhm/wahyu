@@ -1,8 +1,3 @@
-@php
-// DB::enableQueryLog(); // Enable query log
-$submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee_id)->whereNotIn('status_of_submission', [5,6])->count();
-// dd(DB::getQueryLog()); // Show results of log
-@endphp
 
 @extends("app")
 @section("content")
@@ -11,11 +6,7 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
         <div class="container-fluid">
             <!-- /row -->
             <div class="row">
-                @if ($submissions == 0)
-                    <div class="col-sm-8">
-                @else
-                    <div class="col-sm-12">
-                @endif
+                <div class="col-sm-12">
                     <div class="white-box">
                         <h3 class="box-title m-b-0">Data Export</h3>
                         <p class="text-muted m-b-30">Export data to Copy, CSV, Excel, PDF & Print</p>
@@ -26,11 +17,11 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                                         <th>#</th>
                                         <th>ID Employee</th>
                                         <th>Full Name</th>
-                                        <th>Date of Ended Work</th>
-                                        <th>Date of Submission</th>
+                                        <th>Date of Interview</th>
                                         <th>Reason of Submission</th>
                                         <th>Type Submission</th>
                                         <th>Status</th>
+                                        <th>Exit Interview</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -38,11 +29,11 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                                         <th>#</th>
                                         <th>ID Employee</th>
                                         <th>Full Name</th>
-                                        <th>Date of Ended Work</th>
-                                        <th>Date of Submission</th>
+                                        <th>Date of Interview</th>
                                         <th>Reason of Submission</th>
                                         <th>Type Submission</th>
                                         <th>Status</th>
+                                        <th>Exit Interview</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -51,29 +42,6 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                         </div>
                     </div>
                 </div>
-
-                @if ($submissions == 0)
-                <div class="col-sm-4">
-                    <div class="white-box">
-                        <h3 class="box-title m-b-0">Form</h3>
-                        <p class="text-muted m-b-30 font-13"> Fill out the form correctly </p>
-                        {{ Form::open(array('action' => array('Admin\SubmissionController@store', $id_activity), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
-                            <div class="form-group">
-                                <label class="control-label">Date of Ended Work</label>
-                                <input type="date" class="form-control" placeholder="Description" name="date_of_ended_work">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Reason of Submission</label>
-                                <input type="text" required="" class="form-control" placeholder="Description" name="reason_of_submission">
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
-                                <a href="{{ url('submission/'.$id_activity) }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
-                            </div>
-                        {{ Form::close() }}
-                    </div>
-                </div>
-                @endif
 
             </div>
             <!-- /.row -->
@@ -100,17 +68,17 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
                 ajax : {
-                    "url": "/submission/" + {{ $id_activity }} + "/submissionlist"
+                    "url": "exitinterview/exitinterviewlist"
                 },
                 columns: [
                     {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},
                     {data: 'id_employee', name: 'activity_name', searchable: true},
                     {data: 'full_name', name: 'full_name', searchable: true},
-                    {data: 'date_of_ended_work', name: 'date_of_ended_work', searchable: true},
-                    {data: 'date_of_submission', name: 'date_of_submission', searchable: true},
+                    {data: 'date_of_interview', name: 'date_of_submission', searchable: true},
                     {data: 'reason_of_submission', name: 'reason_of_submission', searchable: true},
                     {data: 'type_submission', name: 'type_submission', searchable: true},
-                    {data: 'action', name: 'action', orderable: false}
+                    {data: 'status', name: 'status', searchable: true},
+                    {data: 'exit_interview', name: 'exit_interview', searchable: true},
                 ]
             });
 

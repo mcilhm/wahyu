@@ -1,9 +1,3 @@
-@php
-// DB::enableQueryLog(); // Enable query log
-$submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee_id)->whereNotIn('status_of_submission', [5,6])->count();
-// dd(DB::getQueryLog()); // Show results of log
-@endphp
-
 @extends("app")
 @section("content")
     <!-- Page Content -->
@@ -11,7 +5,7 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
         <div class="container-fluid">
             <!-- /row -->
             <div class="row">
-                @if ($submissions == 0)
+                @if ($submission != null)
                     <div class="col-sm-8">
                 @else
                     <div class="col-sm-12">
@@ -52,23 +46,20 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                     </div>
                 </div>
 
-                @if ($submissions == 0)
+                @if ($submission != null)
                 <div class="col-sm-4">
                     <div class="white-box">
                         <h3 class="box-title m-b-0">Form</h3>
                         <p class="text-muted m-b-30 font-13"> Fill out the form correctly </p>
-                        {{ Form::open(array('action' => array('Admin\SubmissionController@store', $id_activity), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
+                        {{ Form::open(array('action' => array('Admin\ManageJadwalInterviewController@store'), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
+                            <input type="hidden" name="id" value="{{ isset($submission->id) ? $submission->id : null }}">
                             <div class="form-group">
-                                <label class="control-label">Date of Ended Work</label>
-                                <input type="date" class="form-control" placeholder="Description" name="date_of_ended_work">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Reason of Submission</label>
-                                <input type="text" required="" class="form-control" placeholder="Description" name="reason_of_submission">
+                                <label class="control-label">Date of Interview</label>
+                                <input type="date" class="form-control" placeholder="Description" name="date_of_interview">
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>
-                                <a href="{{ url('submission/'.$id_activity) }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
+                                <a href="{{ url('managejadwalinterview/') }}" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</a>
                             </div>
                         {{ Form::close() }}
                     </div>
@@ -100,7 +91,7 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
                 ajax : {
-                    "url": "/submission/" + {{ $id_activity }} + "/submissionlist"
+                    "url": "managejadwalinterview/managejadwalinterviewlist"
                 },
                 columns: [
                     {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},

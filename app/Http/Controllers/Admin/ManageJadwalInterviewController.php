@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class SubmissionController extends Controller
+class ManageJadwalInterviewController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,14 +20,13 @@ class SubmissionController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index(Request $request, $activity)
+    public function index(Request $request)
     {
-        $id_activity = $activity;
-        $submission = "";
+        $submission = null;
         if ($request->query('edit')) {
             $submission = Submission::findOrFail($request->query('edit'));
         }
-        return view('pages.submission.index', compact('submission', 'id_activity'));
+        return view('pages.managejadwalinterview.index', compact('submission'));
     }
 
     /**
@@ -37,7 +36,7 @@ class SubmissionController extends Controller
      */
     public function create()
     {
-        return view('pages.submission.create');
+        return view('pages.managejadwalinterview.create');
     }
 
     /**
@@ -46,31 +45,33 @@ class SubmissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id_activity)
+    public function store(Request $request)
     {
         try {
-
-            Submission::create([
-                'id_employee' => Auth::user()->employee_id,
-                'date_of_ended_work' => $request->date_of_ended_work,
-                'id_activity' => $id_activity,
-                'date_of_submission' => Carbon::now(),
-                'reason_of_submission' => $request->reason_of_submission
-            ]);
-
-            Session::flash('success.message', 'Success to create submission');
-            return redirect('submission/' . $id_activity);
+            if (!empty($request->id)) {
+                $message = "Edit";
+                $submission = Submission::findOrFail($request->id);
+                $submission->update([
+                    'date_of_interview' => $request->date_of_interview
+                ]);
+            }
+            else {
+                Session::flash('error.message', 'Failed to create manage jadwal interview');
+                return redirect('managejadwalinterview/');
+            }
+            Session::flash('success.message', 'Success to create manage jadwal interview');
+            return redirect('managejadwalinterview/');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            Session::flash('error.message', 'Failed to create submission');
-            return redirect('submission/' . $id_activity);
+            Session::flash('error.message', 'Failed to create manage jadwal interview');
+            return redirect('managejadwalinterview/');
         }
     }
 
     /**
      * method for set data in datagrid blade
      */
-    public function getdata($id_activity)
+    public function getdata()
     {
         //$Submission = Submission::where('id_employee', $id_employee)->get();
 
@@ -86,8 +87,9 @@ class SubmissionController extends Controller
                         FROM `submission` A
                         INNER JOIN `employee` B ON A.`id_employee` = B.`id`
                         INNER JOIN `activity` C ON A.`id_activity` = C.`id`
-                        WHERE a.`id_activity` = :id_activity
-                        AND a.`id_employee` = :id_employee', ['id_activity' => $id_activity, 'id_employee' => Auth::user()->employee_id]);
+                        WHERE a.`status_of_submission` = :status_of_submission
+                        AND a.`date_of_interview` IS NULL', 
+                        ['status_of_submission' => 5]);
         return Datatables::of($submission)
 
             ->addColumn('action',  function ($submission) {
@@ -109,7 +111,11 @@ class SubmissionController extends Controller
                     $style_btn = "btn-success";
                     $name_btn = "approved";
                 }
-                $action = '<div class="btn-group"><span class="btn btn-xs ' . $style_btn . '">' . $name_btn . '</span></div>';
+                $action = 
+                '<div class="btn-group">
+                    <a href="managejadwalinterview?edit=' . $submission->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs ' . $style_btn . '">Manage Jadwal Interview</a>
+                </div>';
+                
                 return $action;
             })
 

@@ -88,4 +88,24 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::get('submission/{id}/submissionlist', 'Admin\SubmissionController@getdata');
     Route::get('submission/{id}', 'Admin\SubmissionController@index');
     Route::post('submission/{id}', 'Admin\SubmissionController@store');
+
+
+    Route::get('endedcontract/endedcontractlist', 'Admin\EndedContractController@getdata');
+    Route::get('endedcontract/', 'Admin\EndedContractController@index');
+    Route::get('endedcontract/{id}', 'Admin\EndedContractController@store');
+
+    Route::get('worklist/approvedlist', 'Admin\WorkListController@getdataapproved');
+    Route::get('worklist/endedcontractlist', 'Admin\WorkListController@getdataendedcontract');
+    Route::get('worklist/', 'Admin\WorkListController@index');
+
+    Route::get('manageadministration/', 'Admin\ManageAdministrationController@index');
+
+
+    Route::get('managejadwalinterview/managejadwalinterviewlist', 'Admin\ManageJadwalInterviewController@getdata');
+    Route::get('managejadwalinterview/', 'Admin\ManageJadwalInterviewController@index');
+    Route::post('managejadwalinterview', 'Admin\ManageJadwalInterviewController@store');
+
+    Route::get('exitinterview/exitinterviewlist', 'Admin\ExitInterviewController@getdata');
+    Route::get('exitinterview/', 'Admin\ExitInterviewController@index');
+    Route::get('exitinterview/{id}', 'Admin\ExitInterviewController@store');
 });

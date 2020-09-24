@@ -75,7 +75,8 @@ class LoginController extends Controller
                 $employee = Employee::where('id',Auth::user()->employee_id)->first();
                 $request->session()->put([
                     'no_reg' => $employee->no_reg,
-                    'employee_name' => $employee->first_name." ".$employee->last_name
+                    'employee_name' => $employee->first_name." ".$employee->last_name,
+                    'division_id' => $employee->division_id
                 ]);
             }
             return redirect('home');
