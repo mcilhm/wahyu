@@ -15,7 +15,7 @@
                             </a>
                         </div>
                         <p class="profile-text m-t-15 font-16">
-                            <a href="javascript:void(0);"> 
+                            <a href="javascript:void(0);">
                                 @if (Auth::user()->user_type == 0)
                                     Administrator
                                 @else
@@ -23,7 +23,7 @@
                                 <br> {{ session('no_reg') }}
                                 @endif
 
-                                
+
                                 @if ($role != null)
                                     <br>
                                     {{ $role->name }}
@@ -91,7 +91,7 @@
                                     <a href="{{ url('submissionemployee/2') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> <span class="badge badge-danger">{{ $totalData }}</span></a>
                                 </li>
 
-                                
+
                                 <li>
                                     <a href="{{ url('manageadministration') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Kelola Administrasi PHK </span></a>
                                 </li>
@@ -129,7 +129,7 @@
                                     $totalData = DB::table('submission')
                                         ->join('employee', 'submission.id_employee', '=', 'employee.id')
                                         ->where('submission.status_of_submission', '0')
-                                        ->where('employee.division_id', session('employee_id'))
+                                        ->where('employee.division_id', session('division_id'))
                                         ->count();
                                     // $totalData = \App\Submission::where('status_of_submission', '0')->count();
                                 @endphp

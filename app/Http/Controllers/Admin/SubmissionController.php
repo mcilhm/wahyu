@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Activity;
 use Carbon\Carbon;
 use App\Submission;
 use Illuminate\Http\Request;
@@ -49,17 +50,26 @@ class SubmissionController extends Controller
     public function store(Request $request, $id_activity)
     {
         try {
+            $activity = Activity::where('id', $id_activity)->first();
+            if ($request->hasfile('file_lampiran')) {
+                $tmpFolderPath = 'upload/submission/' . session("no_reg");
+                $fileName = str_replace(' ', '-', $activity->activity_name) . '-' . str_replace(' ', '-', session("employee_name")) . '-' . time() . '.' . $request->file_lampiran->getClientOriginalExtension();
+                $request->file_lampiran->move($tmpFolderPath, $fileName);
 
-            Submission::create([
-                'id_employee' => Auth::user()->employee_id,
-                'date_of_ended_work' => $request->date_of_ended_work,
-                'id_activity' => $id_activity,
-                'date_of_submission' => Carbon::now(),
-                'reason_of_submission' => $request->reason_of_submission
-            ]);
-
-            Session::flash('success.message', 'Success to create submission');
-            return redirect('submission/' . $id_activity);
+                Submission::create([
+                    'id_employee' => Auth::user()->employee_id,
+                    'date_of_ended_work' => $request->date_of_ended_work,
+                    'id_activity' => $id_activity,
+                    'date_of_submission' => Carbon::now(),
+                    'reason_of_submission' => $request->reason_of_submission,
+                    'submission_file' => $tmpFolderPath . $fileName
+                ]);
+                Session::flash('success.message', 'Success to create submission');
+                return redirect('submission/' . $id_activity);
+            } else {
+                Session::flash('error.message', 'Failed to create submission');
+                return redirect('submission/' . $id_activity);
+            }
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             Session::flash('error.message', 'Failed to create submission');
@@ -95,19 +105,19 @@ class SubmissionController extends Controller
                 $name_btn = "";
                 if ($submission->status_of_submission == 0) {
                     $style_btn = "btn-primary";
-                    $name_btn = "first submission";
+                    $name_btn = "First Submission";
                 } else if ($submission->status_of_submission == 2) {
                     $style_btn = "btn-info";
-                    $name_btn = "head division";
+                    $name_btn = "Head Division";
                 } else if ($submission->status_of_submission == 3) {
                     $style_btn = "btn-warning";
-                    $name_btn = "staff ir";
+                    $name_btn = "Staff IR";
                 } else if ($submission->status_of_submission == 4) {
-                    $style_btn = "btn-default";
-                    $name_btn = "head division HRGA";
-                } else if ($submission->status_of_submission == 5) {
                     $style_btn = "btn-success";
-                    $name_btn = "approved";
+                    $name_btn = "Approved";
+                } else if ($submission->status_of_submission == -1) {
+                    $style_btn = "btn-danger";
+                    $name_btn = "Decline";
                 }
                 $action = '<div class="btn-group"><span class="btn btn-xs ' . $style_btn . '">' . $name_btn . '</span></div>';
                 return $action;

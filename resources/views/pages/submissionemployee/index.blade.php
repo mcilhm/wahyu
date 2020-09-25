@@ -21,6 +21,7 @@
                                         <th>Reason of Submission</th>
                                         <th>Type Submission</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -32,6 +33,7 @@
                                         <th>Reason of Submission</th>
                                         <th>Type Submission</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -75,7 +77,8 @@
                     {data: 'date_of_submission', name: 'date_of_submission', searchable: true},
                     {data: 'reason_of_submission', name: 'reason_of_submission', searchable: true},
                     {data: 'type_submission', name: 'type_submission', searchable: true},
-                    {data: 'action', name: 'action', orderable: false}
+                    {data: 'action', name: 'action', orderable: false},
+                    {data: 'decline', name: 'decline', orderable: false}
                 ]
             });
 

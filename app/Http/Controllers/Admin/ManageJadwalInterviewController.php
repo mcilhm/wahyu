@@ -88,8 +88,8 @@ class ManageJadwalInterviewController extends Controller
                         INNER JOIN `employee` B ON A.`id_employee` = B.`id`
                         INNER JOIN `activity` C ON A.`id_activity` = C.`id`
                         WHERE a.`status_of_submission` = :status_of_submission
-                        AND a.`date_of_interview` IS NULL', 
-                        ['status_of_submission' => 5]);
+                        AND a.`date_of_interview` IS NULL',
+                        ['status_of_submission' => 4]);
         return Datatables::of($submission)
 
             ->addColumn('action',  function ($submission) {
@@ -97,25 +97,25 @@ class ManageJadwalInterviewController extends Controller
                 $name_btn = "";
                 if ($submission->status_of_submission == 0) {
                     $style_btn = "btn-primary";
-                    $name_btn = "first submission";
+                    $name_btn = "First Submission";
                 } else if ($submission->status_of_submission == 2) {
                     $style_btn = "btn-info";
-                    $name_btn = "head division";
+                    $name_btn = "Head Division";
                 } else if ($submission->status_of_submission == 3) {
                     $style_btn = "btn-warning";
-                    $name_btn = "staff ir";
+                    $name_btn = "Staff IR";
                 } else if ($submission->status_of_submission == 4) {
-                    $style_btn = "btn-default";
-                    $name_btn = "head division HRGA";
-                } else if ($submission->status_of_submission == 5) {
                     $style_btn = "btn-success";
-                    $name_btn = "approved";
+                    $name_btn = "Approved";
+                } else if ($submission->status_of_submission == -1) {
+                    $style_btn = "btn-danger";
+                    $name_btn = "Decline";
                 }
-                $action = 
+                $action =
                 '<div class="btn-group">
                     <a href="managejadwalinterview?edit=' . $submission->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs ' . $style_btn . '">Manage Jadwal Interview</a>
                 </div>';
-                
+
                 return $action;
             })
 

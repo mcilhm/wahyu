@@ -84,8 +84,8 @@ class ExitInterviewController extends Controller
                         INNER JOIN `activity` C ON A.`id_activity` = C.`id`
                         WHERE a.`status_of_submission` = :status_of_submission
                         AND a.`date_of_interview` IS NOT NULL
-                        AND a.`status_of_exit_interview` = 0', 
-                        ['status_of_submission' => 5]);
+                        AND a.`status_of_exit_interview` = 0',
+                        ['status_of_submission' => 4]);
         return Datatables::of($submission)
             ->addColumn('status',  function ($submission) {
                 $style_btn = "";
@@ -100,9 +100,6 @@ class ExitInterviewController extends Controller
                     $style_btn = "btn-warning";
                     $name_btn = "staff ir";
                 } else if ($submission->status_of_submission == 4) {
-                    $style_btn = "btn-default";
-                    $name_btn = "head division HRGA";
-                } else if ($submission->status_of_submission == 5) {
                     $style_btn = "btn-success";
                     $name_btn = "approved";
                 }
@@ -110,7 +107,7 @@ class ExitInterviewController extends Controller
                 return $action;
             })
             ->addColumn('exit_interview', function ($submission) {
-                
+
                 $action = '<div class="btn-group">
                 <a href="exitinterview/'. $submission->id.'"  data-id="' . $submission->id . '" title="Submit" class="sa-submit btn btn-xs btn-danger"> Exit Interview </a></div>';
                 return $action;

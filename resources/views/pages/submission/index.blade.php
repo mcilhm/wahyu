@@ -1,6 +1,6 @@
 @php
 // DB::enableQueryLog(); // Enable query log
-$submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee_id)->whereNotIn('status_of_submission', [5,6])->count();
+$submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee_id)->whereNotIn('status_of_submission', [-1, 4])->count();
 // dd(DB::getQueryLog()); // Show results of log
 @endphp
 
@@ -65,6 +65,10 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                             <div class="form-group">
                                 <label class="control-label">Reason of Submission</label>
                                 <input type="text" required="" class="form-control" placeholder="Description" name="reason_of_submission">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Lampirkan File</label>
+                                <input type="file" class="form-control" name="file_lampiran"  accept=".docx,.doc,.pdf" aria-label="Choose File" required>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>

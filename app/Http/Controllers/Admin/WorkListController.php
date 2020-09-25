@@ -111,7 +111,7 @@ class WorkListController extends Controller
                         FROM `employee` A
                         INNER JOIN `submission` B ON a.`id` = b.`id_employee`
                         WHERE b.`status_of_submission`=:status_of_submission',
-                        ['status_of_submission' => 5]);
+                        ['status_of_submission' => 4]);
         //  dd(DB::getQueryLog()); // Show results of log
 
         return Datatables::of($submission)
@@ -139,7 +139,7 @@ class WorkListController extends Controller
                 return $action;
             })
             ->addColumn('submission',  function ($submission) {
-                if($submission->status_of_submission == 5)
+                if($submission->status_of_submission == 4)
                     $action = '<span class="btn btn-xs btn-success">Approved</span>';
 
                 return $action;
