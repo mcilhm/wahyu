@@ -106,6 +106,6 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::post('managejadwalinterview', 'Admin\ManageJadwalInterviewController@store');
 
     Route::get('exitinterview/exitinterviewlist', 'Admin\ExitInterviewController@getdata');
-    Route::get('exitinterview/', 'Admin\ExitInterviewController@index');
-    Route::get('exitinterview/{id}', 'Admin\ExitInterviewController@store');
+    Route::get('exitinterview', 'Admin\ExitInterviewController@index');
+    Route::post('exitinterview', 'Admin\ExitInterviewController@store');
 });

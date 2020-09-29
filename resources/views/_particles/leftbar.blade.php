@@ -70,13 +70,18 @@
                             </li>
                         @elseif(Auth::user()->user_type == 1)
                             @php
+
+                            $employee = App\Employee::where('no_reg', Auth::user()->username)->first();
+                            $age = Carbon\Carbon::parse($employee->date_of_birthday)->age;
                             $menu = \App\Activity::all();
                             @endphp
 
                             @if (Auth::user()->role_id == 1)
                                 @foreach($menu as $row)
                                 <li>
-                                    <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                    @if(($age*365) > $row->activity_before_day)
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                    @endif
                                 </li>
                                 @endforeach
                             @elseif (Auth::user()->role_id == 2)

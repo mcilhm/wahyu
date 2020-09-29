@@ -131,13 +131,13 @@ class WorkListController extends Controller
                     $action = '<span class="btn btn-xs btn-success">Done</span>';
                 return $action;
             })
-            ->addColumn('exit_interview',  function ($submission) {
-                if($submission->status_of_exit_interview == 0 || empty($submission->status_of_exit_interview))
-                    $action = '<span class="btn btn-xs btn-danger">Not Yet</span>';
-                else
-                    $action = '<span class="btn btn-xs btn-success">Done</span>';
-                return $action;
-            })
+            // ->addColumn('exit_interview',  function ($submission) {
+            //     if($submission->status_of_exit_interview == 0 || empty($submission->status_of_exit_interview))
+            //         $action = '<span class="btn btn-xs btn-danger">Not Yet</span>';
+            //     else
+            //         $action = '<span class="btn btn-xs btn-success">Done</span>';
+            //     return $action;
+            // })
             ->addColumn('submission',  function ($submission) {
                 if($submission->status_of_submission == 4)
                     $action = '<span class="btn btn-xs btn-success">Approved</span>';

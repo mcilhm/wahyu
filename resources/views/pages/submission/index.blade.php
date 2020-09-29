@@ -1,6 +1,9 @@
 @php
 // DB::enableQueryLog(); // Enable query log
 $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee_id)->whereNotIn('status_of_submission', [-1, 4])->count();
+$employee = App\Employee::where('no_reg', Auth::user()->username)->first();
+$date_age = Carbon\Carbon::parse($employee->date_of_birthday)->addYears(55);
+$age = Carbon\Carbon::parse($employee->date_of_birthday)->age;
 // dd(DB::getQueryLog()); // Show results of log
 @endphp
 
@@ -30,6 +33,7 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                                         <th>Date of Submission</th>
                                         <th>Reason of Submission</th>
                                         <th>Type Submission</th>
+                                        <th>Date of Interview</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
@@ -42,6 +46,7 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                                         <th>Date of Submission</th>
                                         <th>Reason of Submission</th>
                                         <th>Type Submission</th>
+                                        <th>Date of Interview</th>
                                         <th>Status</th>
                                     </tr>
                                 </tfoot>
@@ -60,7 +65,11 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                         {{ Form::open(array('action' => array('Admin\SubmissionController@store', $id_activity), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
                             <div class="form-group">
                                 <label class="control-label">Date of Ended Work</label>
-                                <input type="date" class="form-control" placeholder="Description" name="date_of_ended_work">
+                                @if(($age*365) > 20075)
+                                    <input type="date" class="form-control" placeholder="Description" name="date_of_ended_work" value="{{ $date_age->format('Y-m-d') }}" disabled>
+                                @else
+                                    <input type="date" class="form-control" placeholder="Description" name="date_of_ended_work" min="{{ (new DateTime())->format('Y-m-d') }}" value="{{ (new DateTime())->format('Y-m-d') }}">
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Reason of Submission</label>
@@ -114,6 +123,7 @@ $submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee
                     {data: 'date_of_submission', name: 'date_of_submission', searchable: true},
                     {data: 'reason_of_submission', name: 'reason_of_submission', searchable: true},
                     {data: 'type_submission', name: 'type_submission', searchable: true},
+                    {data: 'date_of_interview', name: 'date_of_interview', searchable: true},
                     {data: 'action', name: 'action', orderable: false}
                 ]
             });

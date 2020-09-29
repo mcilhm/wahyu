@@ -34,25 +34,6 @@
                                         <th>Email</th>
                                         <th>Phone Number</th>
                                         <th>Status</th>
-                                        <th>Action</th><th>#</th>
-                                        <th>No Reg</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Division</th>
-                                        <th>Department</th>
-                                        <th>Section</th>
-                                        <th>Class</th>
-                                        <th>Position</th>
-                                        <th>Job Status</th>
-                                        <th>Date Of Entry</th>
-                                        <th>Date Of Birthday</th>
-                                        <th>Education</th>
-                                        <th>Work Location</th>
-                                        <th>Marital Status</th>
-                                        <th>Genderr</th>
-                                        <th>Email</th>
-                                        <th>Phone Number</th>
-                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -190,11 +171,11 @@
                              </div>
                             <div class="form-group">
                                 <label class="control-label">Email</label>
-                                <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ isset($employe->description) ? $employe->email : null }}">
+                                <input type="email" required="" class="form-control" placeholder="Email" name="email" value="{{ isset($employee->email) ? $employee->email : null }}">
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Phone Number</label>
-                                <input type="text" required="" class="form-control" placeholder="Phone Number" name="phone_number" value="{{ isset($employe->description) ? $employe->phone_number : null }}">
+                                <input type="text" required="" class="form-control" placeholder="Phone Number" name="phone_number" value="{{ isset($employee->phone_number) ? $employee->phone_number : null }}">
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Status</label>

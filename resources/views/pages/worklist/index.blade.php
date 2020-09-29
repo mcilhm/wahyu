@@ -27,7 +27,7 @@
                                                 <th>Full Name</th>
                                                 <th>Status of Document</th>
                                                 <th>Status of Administration</th>
-                                                <th>Status of Exit Interview</th>
+                                                {{-- <th>Status of Exit Interview</th> --}}
                                                 <th>Status of Submission</th>
                                             </tr>
                                         </thead>
@@ -38,7 +38,7 @@
                                                 <th>Full Name</th>
                                                 <th>Status of Document</th>
                                                 <th>Status of Administration</th>
-                                                <th>Status of Exit Interview</th>
+                                                {{-- <th>Status of Exit Interview</th> --}}
                                                 <th>Status of Submission</th>
                                             </tr>
                                         </tfoot>
@@ -120,7 +120,7 @@
                 {data: 'fullname', name: 'fullname', searchable: true},
                 {data: 'document', name: 'document', searchable: true, className: "text-center "},
                 {data: 'administration', name: 'administration', searchable: true, className: "text-center "},
-                {data: 'exit_interview', name: 'exit_interview', searchable: true, className: "text-center "},
+                // {data: 'exit_interview', name: 'exit_interview', searchable: true, className: "text-center "},
                 {data: 'submission', name: 'submission', searchable: true, className: "text-center "}
             ]
         });

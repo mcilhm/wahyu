@@ -92,6 +92,7 @@ class SubmissionController extends Controller
                         a.`date_of_submission`,
                         a.`reason_of_submission`,
                         a.`status_of_submission`,
+                        a.`date_of_interview`,
                         c.`activity_name` type_submission
                         FROM `submission` A
                         INNER JOIN `employee` B ON A.`id_employee` = B.`id`

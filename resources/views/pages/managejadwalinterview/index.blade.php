@@ -55,7 +55,7 @@
                             <input type="hidden" name="id" value="{{ isset($submission->id) ? $submission->id : null }}">
                             <div class="form-group">
                                 <label class="control-label">Date of Interview</label>
-                                <input type="date" class="form-control" placeholder="Description" name="date_of_interview">
+                                <input type="date" class="form-control" placeholder="Description" name="date_of_interview" max="{{ ($submission->date_of_ended_work)->format('Y-m-d') }}">
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Proses</button>

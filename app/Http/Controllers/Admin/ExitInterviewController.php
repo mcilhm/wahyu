@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Employee;
 use Carbon\Carbon;
 use App\Submission;
 use Illuminate\Http\Request;
@@ -22,7 +23,15 @@ class ExitInterviewController extends Controller
 
     public function index(Request $request)
     {
-        return view('pages.exitinterview.index');
+        $interview = null;
+        if ($request->query('edit')) {
+            $interview = DB::table('submission')
+                ->join('employee', 'submission.id_employee', '=', 'employee.id')
+                ->select('submission.*', 'employee.no_reg')
+                ->where('submission.id', $request->query('edit'))
+                ->first();
+        }
+        return view('pages.exitinterview.index', compact('interview'));
     }
 
     /**
@@ -41,16 +50,22 @@ class ExitInterviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id_submission)
+    public function store(Request $request)
     {
         try {
-            if (!empty($id_submission)) {
+            if (!empty($request->id)) {
                 $submission = Submission::findOrFail($request->id);
+                $employee = Employee::where('id', $submission->id_employee)->first();
+                $tmpFolderPath = 'upload/result/interview/' . $employee->no_reg;
+
+                $fileName = str_replace(' ', '-', ($employee->first_name . ' ' . $employee->last_name)) . '-' . time() . '.' . $request->result_exit_interview_file->getClientOriginalExtension();
+                $request->result_exit_interview_file->move($tmpFolderPath, $fileName);
                 $submission->update([
-                    'status_of_exit_interview' => 1
+                    'result_exit_interview_file' => $tmpFolderPath . $fileName,
+                    'status_of_exit_interview' => 1,
+                    'reason_of_resign' => $request->reason_of_resign
                 ]);
-            }
-            else {
+            } else {
                 Session::flash('error.message', 'Failed to update exit interview');
                 return redirect('exitinterview/');
             }
@@ -70,7 +85,8 @@ class ExitInterviewController extends Controller
     {
         //$Submission = Submission::where('id_employee', $id_employee)->get();
 
-        $submission = DB::select('SELECT
+        $submission = DB::select(
+            'SELECT
                         a.`id`,
                         a.`id_employee`,
                         b.`first_name` full_name,
@@ -85,7 +101,8 @@ class ExitInterviewController extends Controller
                         WHERE a.`status_of_submission` = :status_of_submission
                         AND a.`date_of_interview` IS NOT NULL
                         AND a.`status_of_exit_interview` = 0',
-                        ['status_of_submission' => 4]);
+            ['status_of_submission' => 4]
+        );
         return Datatables::of($submission)
             ->addColumn('status',  function ($submission) {
                 $style_btn = "";
@@ -109,7 +126,8 @@ class ExitInterviewController extends Controller
             ->addColumn('exit_interview', function ($submission) {
 
                 $action = '<div class="btn-group">
-                <a href="exitinterview/'. $submission->id.'"  data-id="' . $submission->id . '" title="Submit" class="sa-submit btn btn-xs btn-danger"> Exit Interview </a></div>';
+                    <a href="exitinterview?edit=' . $submission->id . '" data-toggle="tooltip" title="Update" class="btn btn-xs btn-danger">Exit Interview </a>
+                    </div>';
                 return $action;
             })
             ->rawColumns(['status', 'exit_interview'])
