@@ -84,6 +84,7 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::get('submissionemployee/{status}/submissionlist', 'Admin\SubmissionEmployeeController@getdata');
     Route::get('submissionemployee/{status}/{id}', 'Admin\SubmissionEmployeeController@store');
     Route::get('submissionemployee/{status}', 'Admin\SubmissionEmployeeController@index');
+    Route::get('submissionemployee/{status}/{id}/download', 'Admin\SubmissionEmployeeController@download');
 
     Route::get('submission/{id}/submissionlist', 'Admin\SubmissionController@getdata');
     Route::get('submission/{id}', 'Admin\SubmissionController@index');
@@ -94,12 +95,12 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::get('endedcontract/', 'Admin\EndedContractController@index');
     Route::get('endedcontract/{id}', 'Admin\EndedContractController@store');
 
-    Route::get('worklist/approvedlist', 'Admin\WorkListController@getdataapproved');
-    Route::get('worklist/endedcontractlist', 'Admin\WorkListController@getdataendedcontract');
+    Route::get('worklist/resignlist', 'Admin\WorkListController@getdataresign');
+    Route::get('worklist/pensiunlist', 'Admin\WorkListController@getdatapensiun');
+    Route::get('worklist/{id}/endedcontractlist', 'Admin\WorkListController@getdataendedcontract');
+    Route::get('worklist/{id}/generatedendedcontract', 'Admin\WorkListController@generateendedcontract');
+    Route::get('worklist/updatestatusdocument/{id}', 'Admin\WorkListController@updateStatusDocument');
     Route::get('worklist/', 'Admin\WorkListController@index');
-
-    Route::get('manageadministration/', 'Admin\ManageAdministrationController@index');
-
 
     Route::get('managejadwalinterview/managejadwalinterviewlist', 'Admin\ManageJadwalInterviewController@getdata');
     Route::get('managejadwalinterview/', 'Admin\ManageJadwalInterviewController@index');
@@ -108,4 +109,15 @@ Route::group(array('middleware' => ['Admin']), function () {
     Route::get('exitinterview/exitinterviewlist', 'Admin\ExitInterviewController@getdata');
     Route::get('exitinterview', 'Admin\ExitInterviewController@index');
     Route::post('exitinterview', 'Admin\ExitInterviewController@store');
+
+    Route::get('manageadministration/manageadministrationlist', 'Admin\ManageAdministrationController@getdata');
+    Route::get('manageadministration/', 'Admin\ManageAdministrationController@index');
+    Route::get('manageadministration/{id}/download', 'Admin\ManageAdministrationController@download');
+
+
+    Route::get('submissionreport/resignlist', 'Admin\SubmissionReportController@getdataresign');
+    Route::get('submissionreport/pensiunlist', 'Admin\SubmissionReportController@getdatapensiun');
+    Route::get('submissionreport/endedcontractlist', 'Admin\SubmissionReportController@getdataendedcontract');
+    Route::get('submissionreport/', 'Admin\SubmissionReportController@index');
+    Route::get('submissionreport/{id}/download/{type}', 'Admin\SubmissionReportController@download');
 });

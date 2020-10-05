@@ -5650,13 +5650,13 @@ ul.list-icons li i {
 }
 
 .top-left-part {
-    width: 265px;
+    width: 280px;
     float: left;
-    background: rgba(0, 0, 0, .1)
+    border-right: 1px solid #f0f0f0;
 }
 
 .top-left-part a {
-    color: #fff;
+    color: red;
     font-size: 18px;
     padding-left: 0;
     text-transform: uppercase
@@ -7126,12 +7126,12 @@ ul.list-icons li i {
 .sidebar {
     z-index: 10;
     position: absolute;
-    width: 265px;
+    width: 280px;
     padding-top: 60px;
     height: 100%;
     top: 0;
     overflow-y: auto;
-    background: #fff;
+    background: #ffffff;;
     border-right: 1px solid #e5ebec
 }
 

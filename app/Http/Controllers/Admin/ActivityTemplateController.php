@@ -46,7 +46,7 @@ class ActivityTemplateController extends Controller
     {
         try {
 
-            $tmpFolderPath = 'upload/file/';
+            $tmpFolderPath = 'upload/template/';
             if (!empty($request->id)) {
                 $activity_template = ActivityTemplate::findOrFail($request->id);
                 if ($request->hasfile('file_template')) {

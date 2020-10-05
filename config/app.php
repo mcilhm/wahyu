@@ -169,6 +169,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Madnest\Madzipper\MadzipperServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -232,7 +233,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Form' => Collective\Html\FormFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
-
+        'Madzipper' => Madnest\Madzipper\Madzipper::class,
 
     ],
 

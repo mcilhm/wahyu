@@ -52,7 +52,7 @@ class SubmissionController extends Controller
         try {
             $activity = Activity::where('id', $id_activity)->first();
             if ($request->hasfile('file_lampiran')) {
-                $tmpFolderPath = 'upload/submission/' . session("no_reg");
+                $tmpFolderPath = 'upload/submission/' . session("no_reg") ."/";
                 $fileName = str_replace(' ', '-', $activity->activity_name) . '-' . str_replace(' ', '-', session("employee_name")) . '-' . time() . '.' . $request->file_lampiran->getClientOriginalExtension();
                 $request->file_lampiran->move($tmpFolderPath, $fileName);
 
@@ -87,7 +87,9 @@ class SubmissionController extends Controller
         $submission = DB::select('SELECT
                         a.`id`,
                         a.`id_employee`,
-                        b.`first_name` full_name,
+                        b.`no_reg`,
+                        b.`first_name`,
+                        b.`last_name`,
                         a.`date_of_ended_work`,
                         a.`date_of_submission`,
                         a.`reason_of_submission`,
@@ -100,7 +102,10 @@ class SubmissionController extends Controller
                         WHERE a.`id_activity` = :id_activity
                         AND a.`id_employee` = :id_employee', ['id_activity' => $id_activity, 'id_employee' => Auth::user()->employee_id]);
         return Datatables::of($submission)
-
+            ->addColumn('full_name',  function ($submission) {
+                $action = $submission->first_name . " " . $submission->last_name;
+                return $action;
+            })
             ->addColumn('action',  function ($submission) {
                 $style_btn = "";
                 $name_btn = "";
@@ -123,8 +128,7 @@ class SubmissionController extends Controller
                 $action = '<div class="btn-group"><span class="btn btn-xs ' . $style_btn . '">' . $name_btn . '</span></div>';
                 return $action;
             })
-
-            ->rawColumns(['action'])
+            ->rawColumns(['full_name','action'])
             ->make(true);
     }
 }

@@ -80,7 +80,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Result of Exit Interview</label>
-                                <input type="file" class="form-control" name="result_exit_interview_file" required>
+                                <input type="file" class="form-control" accept=".docx,.doc,.pdf" name="result_exit_interview_file" required>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Save</button>

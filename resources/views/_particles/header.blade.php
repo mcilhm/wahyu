@@ -8,10 +8,10 @@
                 <div class="top-left-part">
                     <a class="logo" href="index.html">
                         <b>
-                            <img src="../plugins/images/logo.png" alt="home" />
+                            <img src="../plugins/images/logo_tam.png" alt="home" width="32px" height="34px"  />
                         </b>
                         <span>
-                            IRIS
+                            Toyota Astra Motor
                         </span>
                     </a>
                 </div>

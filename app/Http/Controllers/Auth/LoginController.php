@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
-use App\Employee;
+use DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -72,11 +71,15 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->remember)) {
             if(Auth::user()->user_type == 1){
-                $employee = Employee::where('id',Auth::user()->employee_id)->first();
+                $employee = DB::table("employee")
+                        ->join('division', 'employee.division_id', "=", "division.id")
+                        ->select('employee.*', 'division.name')
+                        ->where('employee.id', Auth::user()->employee_id)->first();
                 $request->session()->put([
                     'no_reg' => $employee->no_reg,
                     'employee_name' => $employee->first_name." ".$employee->last_name,
-                    'division_id' => $employee->division_id
+                    'division_id' => $employee->division_id,
+                    'division_name' => $employee->name
                 ]);
             }
             return redirect('home');

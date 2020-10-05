@@ -78,7 +78,8 @@ class ManageJadwalInterviewController extends Controller
         $submission = DB::select('SELECT
                         a.`id`,
                         a.`id_employee`,
-                        b.`first_name` full_name,
+                        b.`first_name`,
+                        b.`last_name`,
                         a.`date_of_ended_work`,
                         a.`date_of_submission`,
                         a.`reason_of_submission`,
@@ -91,7 +92,10 @@ class ManageJadwalInterviewController extends Controller
                         AND a.`date_of_interview` IS NULL',
                         ['status_of_submission' => 4]);
         return Datatables::of($submission)
-
+            ->addColumn('full_name',  function ($submission) {
+                $action = $submission->first_name . " " . $submission->last_name;
+                return $action;
+            })
             ->addColumn('action',  function ($submission) {
                 $style_btn = "";
                 $name_btn = "";
@@ -119,7 +123,7 @@ class ManageJadwalInterviewController extends Controller
                 return $action;
             })
 
-            ->rawColumns(['action'])
+            ->rawColumns(['full_name', 'action'])
             ->make(true);
     }
 }

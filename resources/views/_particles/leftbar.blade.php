@@ -21,6 +21,7 @@
                                 @else
                                  {{ session('employee_name') }}
                                 <br> {{ session('no_reg') }}
+                                <br> {{ session('division_name') }}
                                 @endif
 
 
@@ -79,7 +80,9 @@
                             @if (Auth::user()->role_id == 1)
                                 @foreach($menu as $row)
                                 <li>
-                                    @if(($age*365) > $row->activity_before_day)
+                                    @if(($age*365) > $row->activity_before_day && $row->activity_before_day > 0)
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                    @elseif(($age*365) < ($row->activity_before_day+19710) && $row->activity_before_day == 0)
                                         <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
                                     @endif
                                 </li>
@@ -95,11 +98,22 @@
                                 <li>
                                     <a href="{{ url('submissionemployee/2') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> <span class="badge badge-danger">{{ $totalData }}</span></a>
                                 </li>
-
-
                                 <li>
                                     <a href="{{ url('manageadministration') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Kelola Administrasi PHK </span></a>
                                 </li>
+                                <li>
+                                    <a href="{{ url('submissionreport') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Laporan </span></a>
+                                </li>
+
+                                @foreach($menu as $row)
+                                <li>
+                                    @if(($age*365) > $row->activity_before_day && $row->activity_before_day > 0)
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                    @elseif(($age*365) < ($row->activity_before_day+19710) && $row->activity_before_day == 0)
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                    @endif
+                                </li>
+                                @endforeach
                             @elseif (Auth::user()->role_id == 3)
                                 <li>
                                     <a href="{{ url('employee') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Employee</span></a>
@@ -142,6 +156,16 @@
                                     <a href="{{ url('submissionemployee/0') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> <span class="badge badge-danger">{{ $totalData }}</span></a>
                                 </li>
 
+                                @foreach($menu as $row)
+                                <li>
+                                    @if(($age*365) > $row->activity_before_day && $row->activity_before_day > 0)
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                    @elseif(($age*365) < ($row->activity_before_day+19710) && $row->activity_before_day == 0)
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                    @endif
+                                </li>
+                                @endforeach
+
                             @elseif (Auth::user()->role_id == 5)
                                 @php
                                 $totalData = \App\Submission::where('status_of_submission', '3')->count();
@@ -149,11 +173,22 @@
                                 <li>
                                     <a href="{{ url('submissionemployee/3') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> <span class="badge badge-danger">{{ $totalData }}</span></a>
                                 </li>
+                                
+                                
+                                @foreach($menu as $row)
+                                <li>
+                                    @if(($age*365) > $row->activity_before_day && $row->activity_before_day > 0)
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                    @elseif(($age*365) < ($row->activity_before_day+19710) && $row->activity_before_day == 0)
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                    @endif
+                                </li>
+                                @endforeach
 
                             @elseif (Auth::user()->role_id == 6)
                                 <li>
-                                    <a href="{{ url('managejadwalinterview') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Mengelola Jadwal Exit Inteview</span></a>
-                                    <a href="{{ url('exitinterview') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Melakukan Exit Inteview</span></a>
+                                    <a href="{{ url('managejadwalinterview') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Mengelola Jadwal Exit Interview</span></a>
+                                    <a href="{{ url('exitinterview') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Melakukan Exit Interview</span></a>
                                 </li>
 
                             @endif

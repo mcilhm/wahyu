@@ -1,6 +1,6 @@
 @php
 // DB::enableQueryLog(); // Enable query log
-$submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee_id)->whereNotIn('status_of_submission', [-1, 4])->count();
+$submissions = \App\Submission::where('id_employee', '=', Auth::user()->employee_id)->whereNotIn('status_of_submission', [-1])->count();
 $employee = App\Employee::where('no_reg', Auth::user()->username)->first();
 $date_age = Carbon\Carbon::parse($employee->date_of_birthday)->addYears(55);
 $age = Carbon\Carbon::parse($employee->date_of_birthday)->age;
@@ -27,26 +27,28 @@ $age = Carbon\Carbon::parse($employee->date_of_birthday)->age;
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>ID Employee</th>
+                                        <th>No Reg</th>
                                         <th>Full Name</th>
                                         <th>Date of Ended Work</th>
                                         <th>Date of Submission</th>
                                         <th>Reason of Submission</th>
                                         <th>Type Submission</th>
                                         <th>Date of Interview</th>
+                                        {{-- <th>Attachment File of Submission</th> --}}
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
-                                        <th>ID Employee</th>
+                                        <th>No Reg</th>
                                         <th>Full Name</th>
                                         <th>Date of Ended Work</th>
                                         <th>Date of Submission</th>
                                         <th>Reason of Submission</th>
                                         <th>Type Submission</th>
                                         <th>Date of Interview</th>
+                                        {{-- <th>Attachment File of Submission</th> --}}
                                         <th>Status</th>
                                     </tr>
                                 </tfoot>
@@ -117,7 +119,7 @@ $age = Carbon\Carbon::parse($employee->date_of_birthday)->age;
                 },
                 columns: [
                     {data: 'id', name: 'id', orderable: false, searchable: true, className: "text-center "},
-                    {data: 'id_employee', name: 'activity_name', searchable: true},
+                    {data: 'no_reg', name: 'no_reg', searchable: true},
                     {data: 'full_name', name: 'full_name', searchable: true},
                     {data: 'date_of_ended_work', name: 'date_of_ended_work', searchable: true},
                     {data: 'date_of_submission', name: 'date_of_submission', searchable: true},

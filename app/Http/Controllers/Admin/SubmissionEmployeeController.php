@@ -64,6 +64,8 @@ class SubmissionEmployeeController extends Controller
             }
 
             Session::flash('success.message', 'Success to update status submission');
+            if($status == -1)
+                return redirect('submissionemployee/' . 0);
             return redirect('submissionemployee/' . ($status - 1));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -79,15 +81,20 @@ class SubmissionEmployeeController extends Controller
     {
         //$Submission = Submission::where('id_employee', $id_employee)->get();
         $submission = null;
+
+
         if (Auth::user()->role_id == 2 || Auth::user()->role_id == 5) {
             $submission = DB::select('SELECT
                         a.`id`,
                         a.`id_employee`,
-                        b.`first_name` full_name,
+                        b.`no_reg`,
+                        b.`first_name`,
+                        b.`last_name`,
                         a.`date_of_submission`,
                         a.`reason_of_submission`,
                         a.`status_of_submission`,
-                        c.`activity_name` type_submission
+                        c.`activity_name` type_submission,
+                        a.`submission_file`
                         FROM `submission` A
                         INNER JOIN `employee` B ON A.`id_employee` = B.`id`
                         INNER JOIN `activity` C ON A.`id_activity` = C.`id`
@@ -96,11 +103,14 @@ class SubmissionEmployeeController extends Controller
             $submission = DB::select('SELECT
                 a.`id`,
                 a.`id_employee`,
-                b.`first_name` full_name,
+                b.`no_reg`,
+                b.`first_name`,
+                b.`last_name`,
                 a.`date_of_submission`,
                 a.`reason_of_submission`,
                 a.`status_of_submission`,
-                c.`activity_name` type_submission
+                c.`activity_name` type_submission,
+                a.`submission_file`
                 FROM `submission` A
                 INNER JOIN `employee` B ON A.`id_employee` = B.`id`
                 INNER JOIN `activity` C ON A.`id_activity` = C.`id`
@@ -108,6 +118,25 @@ class SubmissionEmployeeController extends Controller
                 AND b.`division_id`=:division_id', ['status_of_submission' => $status, 'division_id' => session("division_id")]);
         }
         return Datatables::of($submission)
+            ->addColumn('full_name',  function ($submission) {
+                $action = $submission->first_name . " " . $submission->last_name;
+                return $action;
+            })
+            ->addColumn('submission_file',  function ($submission) {
+                $status_of_submission = null;
+                if (Auth::user()->role_id == 4) {
+                    $status_of_submission = 0;
+                } else if (Auth::user()->role_id == 2) {
+                    $status_of_submission = 2;
+                } else  if (Auth::user()->role_id == 5) {
+                    $status_of_submission = 3;
+                }
+                $action = '<div class="btn-group">
+                <a href="' . $status_of_submission . '/' . $submission->id . '/download" title="Download File" class="btn btn-xs btn-default"><i class="fa fa-file"></i> ' . $submission->submission_file . '
+                </a>
+                </div>';
+                return $action;
+            })
             ->addColumn('action',  function ($submission) {
                 $style_btn = "";
                 $name_btn = "";
@@ -140,7 +169,34 @@ class SubmissionEmployeeController extends Controller
                 </div>';
                 return $action;
             })
-            ->rawColumns(['action', 'decline'])
+            ->rawColumns(['full_name','submission_file', 'action', 'decline'])
             ->make(true);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function download($status, $id)
+    {
+        try {
+            if (!empty($id)) {
+
+                $submission = Submission::where('id', $id)->first();
+                $headers = ['Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Content-Type: application/pdf'];
+                $newName = explode("/", $submission->submission_file)[3];
+
+                Session::flash('success.message', 'Success download file');
+                return response()->download(public_path($submission->submission_file), $newName, $headers);
+            }
+
+            Session::flash('error.message', 'Failed to download file');
+            return redirect('submissionemployee/' . $status);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error.message', 'Failed to download file');
+            return redirect('submissionemployee/' . $status);
+        }
     }
 }

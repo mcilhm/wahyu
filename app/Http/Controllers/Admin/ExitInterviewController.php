@@ -56,7 +56,7 @@ class ExitInterviewController extends Controller
             if (!empty($request->id)) {
                 $submission = Submission::findOrFail($request->id);
                 $employee = Employee::where('id', $submission->id_employee)->first();
-                $tmpFolderPath = 'upload/result/interview/' . $employee->no_reg;
+                $tmpFolderPath = 'upload/result/interview/' . $employee->no_reg . "/";
 
                 $fileName = str_replace(' ', '-', ($employee->first_name . ' ' . $employee->last_name)) . '-' . time() . '.' . $request->result_exit_interview_file->getClientOriginalExtension();
                 $request->result_exit_interview_file->move($tmpFolderPath, $fileName);
@@ -89,7 +89,8 @@ class ExitInterviewController extends Controller
             'SELECT
                         a.`id`,
                         a.`id_employee`,
-                        b.`first_name` full_name,
+                        b.`first_name`,
+                        b.`last_name`,
                         a.`date_of_ended_work`,
                         a.`date_of_interview`,
                         a.`reason_of_submission`,
@@ -104,6 +105,10 @@ class ExitInterviewController extends Controller
             ['status_of_submission' => 4]
         );
         return Datatables::of($submission)
+            ->addColumn('full_name',  function ($submission) {
+                $action = $submission->first_name . " " . $submission->last_name;
+                return $action;
+            })
             ->addColumn('status',  function ($submission) {
                 $style_btn = "";
                 $name_btn = "";
@@ -130,7 +135,7 @@ class ExitInterviewController extends Controller
                     </div>';
                 return $action;
             })
-            ->rawColumns(['status', 'exit_interview'])
+            ->rawColumns(['full_name', 'status', 'exit_interview'])
             ->make(true);
     }
 }
