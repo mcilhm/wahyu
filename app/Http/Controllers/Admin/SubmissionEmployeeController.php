@@ -60,7 +60,7 @@ class SubmissionEmployeeController extends Controller
                 if ($status == 1) $status = 2;
                 $message = "Edit";
                 $submission = Submission::findOrFail($id_submission);
-                $submission->update(['status_of_submission' => $status]);
+                $submission->update(['status_of_submission' => $status, 'isRead' => 0]);
             }
 
             Session::flash('success.message', 'Success to update status submission');

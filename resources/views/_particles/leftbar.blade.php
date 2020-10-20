@@ -79,24 +79,53 @@
 
                             @if (Auth::user()->role_id == 1)
                                 @foreach($menu as $row)
+                                
+                                @php
+                                    $totalData = \App\Submission::where('isRead', '0')->where('id_activity', $row->id)->where('id_employee', Auth::user()->employee_id)->count();
+                                @endphp
                                 <li>
                                     @if(($age*365) > $row->activity_before_day && $row->activity_before_day > 0)
-                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span>
+                                            @if($totalData > 0) 
+                                                <span class="badge badge-danger">{{ $totalData }}</span>
+                                            @endif
+                                        </a>
                                     @elseif(($age*365) < ($row->activity_before_day+19710) && $row->activity_before_day == 0)
-                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span></a>
+                                        <a href="{{ url('submission/'.$row->id) }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> {{ $row->activity_name }}</span>
+                                            @if($totalData > 0) 
+                                                <span class="badge badge-danger">{{ $totalData }}</span>
+                                            @endif
+                                        </a>
                                     @endif
                                 </li>
                                 @endforeach
                             @elseif (Auth::user()->role_id == 2)
+                                @php
+                                    $totalData = DB::table('submission')
+                                        ->join('employee', 'submission.id_employee', '=', 'employee.id')
+                                        ->where('submission.status_of_submission', '4')
+                                        ->where('submission.status_of_document', '!=' , '1')
+                                        ->where('submission.status_of_administration', '!=' , '1')
+                                        ->where('submission.id_activity', '1')
+                                        ->count();
+                                @endphp
                                 <li>
-                                    <a href="{{ url('worklist') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Monitoring Aktivitas</span></a>
+                                    <a href="{{ url('worklist') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Monitoring Aktivitas</span>
+                                        @if($totalData > 0) 
+                                            <span class="badge badge-danger">{{ $totalData }}</span>
+                                        @endif
+                                    </a>
                                 </li>
 
                                 @php
                                 $totalData = \App\Submission::where('status_of_submission', '2')->count();
                                 @endphp
                                 <li>
-                                    <a href="{{ url('submissionemployee/2') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> <span class="badge badge-danger">{{ $totalData }}</span></a>
+                                    <a href="{{ url('submissionemployee/2') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> 
+                                        @if($totalData > 0) 
+                                            <span class="badge badge-danger">{{ $totalData }}</span>
+                                        @endif
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="{{ url('manageadministration') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Kelola Administrasi PHK </span></a>
@@ -153,7 +182,11 @@
                                     // $totalData = \App\Submission::where('status_of_submission', '0')->count();
                                 @endphp
                                 <li>
-                                    <a href="{{ url('submissionemployee/0') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> <span class="badge badge-danger">{{ $totalData }}</span></a>
+                                    <a href="{{ url('submissionemployee/0') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> 
+                                        @if($totalData > 0) 
+                                            <span class="badge badge-danger">{{ $totalData }}</span>
+                                        @endif
+                                    </a>
                                 </li>
 
                                 @foreach($menu as $row)
@@ -171,7 +204,11 @@
                                 $totalData = \App\Submission::where('status_of_submission', '3')->count();
                                 @endphp
                                 <li>
-                                    <a href="{{ url('submissionemployee/3') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> <span class="badge badge-danger">{{ $totalData }}</span></a>
+                                    <a href="{{ url('submissionemployee/3') }}" class="active waves-effect" aria-expanded="false"><span class="hide-menu"> Validasi Pengajuan</span> 
+                                        @if($totalData > 0) 
+                                            <span class="badge badge-danger">{{ $totalData }}</span>
+                                        @endif
+                                    </a>
                                 </li>
                                 
                                 

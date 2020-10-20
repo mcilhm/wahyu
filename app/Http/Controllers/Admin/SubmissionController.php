@@ -23,6 +23,10 @@ class SubmissionController extends Controller
 
     public function index(Request $request, $activity)
     {
+        $submissions = Submission::where("id_employee",Auth::user()->employee_id);
+        $submissions->update(['isRead' => 1]);
+
+
         $id_activity = $activity;
         $submission = "";
         if ($request->query('edit')) {

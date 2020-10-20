@@ -104,7 +104,9 @@ class ManageAdministrationController extends Controller
                         b.`status_of_submission`
                         FROM `employee` A
                         INNER JOIN `submission` B ON a.`id` = b.`id_employee`
-                        WHERE b.`status_of_submission`=:status_of_submission',
+                        WHERE b.`status_of_submission`=:status_of_submission
+                        AND b.`status_of_document` != 1 
+                        AND b.`status_of_administration` != 1',
             ['status_of_submission' => 4]
         );
         //  dd(DB::getQueryLog()); // Show results of log
@@ -169,7 +171,7 @@ class ManageAdministrationController extends Controller
             ->join('department', 'employee.department_id', "=", "department.id")
             ->join('section', 'employee.section_id', "=", "section.id")
             ->join('position', 'employee.position_id', "=", "position.id")
-            ->select('employee.*', 'submission.date_of_submission', 'submission.id_activity', 'division.name AS division_name', 'department.name AS department_name', 'section.name AS section_name', 'position.name AS position_name')
+            ->select('employee.*', 'submission.date_of_submission', 'submission.date_of_ended_work', 'submission.id_activity', 'division.name AS division_name', 'department.name AS department_name', 'section.name AS section_name', 'position.name AS position_name')
             ->where('submission.id', $id)
             ->first();
 
@@ -196,7 +198,7 @@ class ManageAdministrationController extends Controller
         $templateProcessor->setValue('division_name', $employee->division_name);
 
         $templateProcessor->setValue('entry_date', Carbon::parse($employee->date_of_entry)->format('d F Y'));
-        $templateProcessor->setValue('end_date', Carbon::parse($employee->date_of_submission)->format('d F Y'));
+        $templateProcessor->setValue('end_date', Carbon::parse($employee->date_of_ended_work)->format('d F Y'));
 
         $fileNameKet = $employee->no_reg . '_surat_keterangan_bekerja_' . time() . '.docx';
 
@@ -230,9 +232,9 @@ class ManageAdministrationController extends Controller
             $templateProcessor->setValue('employee_name', $employee->first_name . " " . $employee->last_name);
             $templateProcessor->setValue('division_name', $employee->division_name);
             $templateProcessor->setValue('submission_date', Carbon::parse($employee->date_of_submission)->format('d F Y'));
-            $templateProcessor->setValue('day', $this->getDayOfIndo(Carbon::parse($employee->date_of_submission)->format('D')));
-            $templateProcessor->setValue('end_date', Carbon::parse($employee->date_of_submission)->format('d F Y'));
-            $templateProcessor->setValue('time', "10.00");
+            $templateProcessor->setValue('day', $this->getDayOfIndo(Carbon::parse($employee->date_of_ended_work)->format('D')));
+            $templateProcessor->setValue('end_date', Carbon::parse($employee->date_of_ended_work)->format('d F Y'));
+            // $templateProcessor->setValue('time', "10.00");
 
             $templateProcessor->setValue('name', $head_of_division_HRGA->first_name . " " . $head_of_division_HRGA->last_name);
 
@@ -266,9 +268,9 @@ class ManageAdministrationController extends Controller
             $templateProcessor->setValue('employee_name', $employee->first_name . " " . $employee->last_name);
             $templateProcessor->setValue('division_name', $employee->division_name);
             $templateProcessor->setValue('submission_date', Carbon::parse($employee->date_of_submission)->format('d F Y'));
-            $templateProcessor->setValue('day', $this->getDayOfIndo(Carbon::parse($employee->date_of_submission)->format('D')));
-            $templateProcessor->setValue('end_date', Carbon::parse($employee->date_of_submission)->format('d F Y'));
-            $templateProcessor->setValue('time', "10.00");
+            $templateProcessor->setValue('day', $this->getDayOfIndo(Carbon::parse($employee->date_of_ended_work)->format('D')));
+            $templateProcessor->setValue('end_date', Carbon::parse($employee->date_of_ended_work)->format('d F Y'));
+            // $templateProcessor->setValue('time', "10.00");
 
             $templateProcessor->setValue('name', $head_of_division_HRGA->first_name . " " . $head_of_division_HRGA->last_name);
 
@@ -301,9 +303,9 @@ class ManageAdministrationController extends Controller
             $templateProcessor->setValue('employee_name', $employee->first_name . " " . $employee->last_name);
             $templateProcessor->setValue('division_name', $employee->division_name);
             $templateProcessor->setValue('submission_date', Carbon::parse($employee->date_of_submission)->format('d F Y'));
-            $templateProcessor->setValue('day', $this->getDayOfIndo(Carbon::parse($employee->date_of_submission)->format('D')));
-            $templateProcessor->setValue('end_date', Carbon::parse($employee->date_of_submission)->format('d F Y'));
-            $templateProcessor->setValue('time', "10.00");
+            $templateProcessor->setValue('day', $this->getDayOfIndo(Carbon::parse($employee->date_of_ended_work)->format('D')));
+            $templateProcessor->setValue('end_date', Carbon::parse($employee->date_of_ended_work)->format('d F Y'));
+            // $templateProcessor->setValue('time', "10.00");
 
             $templateProcessor->setValue('name', $head_of_division_HRGA->first_name . " " . $head_of_division_HRGA->last_name);
 
