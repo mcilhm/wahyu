@@ -80,8 +80,8 @@
                     {data: 'reason_of_submission', name: 'reason_of_submission', searchable: true},
                     {data: 'type_submission', name: 'type_submission', searchable: true},
                     {data: 'submission_file', name: 'submission_file', searchable: true},
-                    {data: 'action', name: 'action', orderable: false},
-                    {data: 'decline', name: 'decline', orderable: false}
+                    {data: 'status', name: 'status', orderable: false},
+                    {data: 'action', name: 'action', orderable: false}
                 ]
             });
 

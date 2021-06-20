@@ -67,7 +67,7 @@ $age = Carbon\Carbon::parse($employee->date_of_birthday)->age;
                         {{ Form::open(array('action' => array('Admin\SubmissionController@store', $id_activity), 'method' => 'POST' ,'class' => 'form-horizontal','enctype' => 'multipart/form-data')) }}
                             <div class="form-group">
                                 <label class="control-label">Date of Ended Work</label>
-                                @if(($age*365) > 20075)
+                                @if(($age*365) > 19710)
                                     <input type="date" class="form-control" placeholder="Description" name="date_of_ended_work" value="{{ $date_age->format('Y-m-d') }}" disabled>
                                 @else
                                     <input type="date" class="form-control" placeholder="Description" name="date_of_ended_work" min="{{ (new DateTime())->format('Y-m-d') }}" value="{{ (new DateTime())->format('Y-m-d') }}">

@@ -137,7 +137,7 @@ class SubmissionEmployeeController extends Controller
                 </div>';
                 return $action;
             })
-            ->addColumn('action',  function ($submission) {
+            ->addColumn('status',  function ($submission) {
                 $style_btn = "";
                 $name_btn = "";
                 if ($submission->status_of_submission == 0) {
@@ -156,20 +156,17 @@ class SubmissionEmployeeController extends Controller
                     $style_btn = "btn-danger";
                     $name_btn = "Decline";
                 }
-                $action = '<div class="btn-group">
-                <a href="' . ($submission->status_of_submission + 1) . '/' . $submission->id . '"  data-id="' . $submission->status_of_submission . '" title="Submit" class="sa-submit btn btn-xs ' . $style_btn . '">' . $name_btn . '
-                </a>
-                </div>';
+                $action = '<span class="sa-submit btn btn-xs ' . $style_btn . '">' . $name_btn . '</span>';
                 return $action;
             })
-            ->addColumn('decline',  function ($submission) {
+            ->addColumn('action',  function ($submission) {
                 $action = '<div class="btn-group">
-                <a href="' . -1 . '/' . $submission->id . '"  data-id="' . $submission->status_of_submission . '" title="Decline" class="sa-decline btn btn-xs btn-default"><i class="fa fa-close"></i> Decline
-                </a>
-                </div>';
+                                <a href="' . ($submission->status_of_submission + 1) . '/' . $submission->id . '"  data-id="' . $submission->status_of_submission . '" title="Approve" class="sa-submit btn btn-xs btn-default"><i class="fa fa-check"></i> Approve</a>
+                                <a href="' . -1 . '/' . $submission->id . '"  data-id="' . $submission->status_of_submission . '" title="Decline" class="sa-decline btn btn-xs btn-danger"><i class="fa fa-close"></i> Decline</a>
+                            </div>';
                 return $action;
             })
-            ->rawColumns(['full_name','submission_file', 'action', 'decline'])
+            ->rawColumns(['full_name','submission_file', 'status', 'action'])
             ->make(true);
     }
 

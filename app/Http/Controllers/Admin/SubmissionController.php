@@ -60,14 +60,31 @@ class SubmissionController extends Controller
                 $fileName = str_replace(' ', '-', $activity->activity_name) . '-' . str_replace(' ', '-', session("employee_name")) . '-' . time() . '.' . $request->file_lampiran->getClientOriginalExtension();
                 $request->file_lampiran->move($tmpFolderPath, $fileName);
 
-                Submission::create([
-                    'id_employee' => Auth::user()->employee_id,
-                    'date_of_ended_work' => $request->date_of_ended_work,
-                    'id_activity' => $id_activity,
-                    'date_of_submission' => Carbon::now(),
-                    'reason_of_submission' => $request->reason_of_submission,
-                    'submission_file' => $tmpFolderPath . $fileName
-                ]);
+                if($id_activity == 2)
+                {
+                    Submission::create([
+                        'id_employee' => Auth::user()->employee_id,
+                        'date_of_ended_work' => $request->date_of_ended_work,
+                        'id_activity' => $id_activity,
+                        'date_of_submission' => Carbon::now(),
+                        'reason_of_submission' => $request->reason_of_submission,
+                        'submission_file' => $tmpFolderPath . $fileName,
+                        'date_of_interview' => '2010-01-01',
+                        'status_of_exit_interview' => 1,
+                    ]);
+                }
+                else
+                {
+
+                    Submission::create([
+                        'id_employee' => Auth::user()->employee_id,
+                        'date_of_ended_work' => $request->date_of_ended_work,
+                        'id_activity' => $id_activity,
+                        'date_of_submission' => Carbon::now(),
+                        'reason_of_submission' => $request->reason_of_submission,
+                        'submission_file' => $tmpFolderPath . $fileName
+                    ]);
+                }
                 Session::flash('success.message', 'Success to create submission');
                 return redirect('submission/' . $id_activity);
             } else {

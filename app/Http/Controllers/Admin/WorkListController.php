@@ -341,7 +341,9 @@ class WorkListController extends Controller
         $templateProcessor->saveAs($pathFile . $fileName);
 
 
-        $headers = ['Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        $headers = [
+            'Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            ];
         $newName = 'surat_ended_contract_to_divisi' . time() . '.docx';
 
         DB::table('employee')

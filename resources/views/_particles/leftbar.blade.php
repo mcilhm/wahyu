@@ -75,6 +75,7 @@
                             $employee = App\Employee::where('no_reg', Auth::user()->username)->first();
                             $age = Carbon\Carbon::parse($employee->date_of_birthday)->age;
                             $menu = \App\Activity::all();
+
                             @endphp
 
                             @if (Auth::user()->role_id == 1)
